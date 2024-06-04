@@ -14,6 +14,10 @@ public class Slice : MonoBehaviour
         public Vector3 Position;
         public Vector2 Uv;
         public Vector3 Normal;
+
+        /// <summary>
+        /// Vertex의 면이 어느 방향을 향하고 있는지 파악하는 부울
+        /// </summary>
         public bool Side;
     }
 
@@ -139,7 +143,7 @@ public class Slice : MonoBehaviour
             bool is12SameSide = vertexData1.Side == vertexData2.Side;
             bool is23SameSide = vertexData2.Side == vertexData3.Side;
 
-            // 모두 같은 면에 해당하는 방향이라면
+            // 모두 자를 평면과 같은 면에 해당하는 방향이라면 -> 안자르고 그대로 두게할 평면들
             if (is12SameSide && is23SameSide)
             {
                 SlicedObjectData slicedObjectData = vertexData1.Side ? positiveMesh : negativeMesh; // 첫번째 슬라이스인지 두번째 슬라이스인지 구하고
@@ -156,9 +160,9 @@ public class Slice : MonoBehaviour
     /// </summary>
     /// <param name="from">잘릴 오브젝트의 한 선분중 하나</param>
     /// <param name="to">잘릴 오브젝트의 한 선분중 나머지 하나</param>
-    /// <param name="planeOrigin">자르는 벡터값</param>
+    /// <param name="planeOrigin">자르는 평면의 벡터값</param>
     /// <param name="normal">자르는 평면의 노말값</param>
-    /// <param name="result">잘린 지점의 벡터값</param>
+    /// <param name="result">잘린 지점, 교차점 위치</param>
     /// <returns>성공적으로 지점을 구했으면 true 아니면 false</returns>
     public static bool PointIntersectAPlane(Vector3 from , Vector3 to, Vector3 planeOrigin, Vector3 normal, out Vector3 result)
     {
@@ -179,21 +183,51 @@ public class Slice : MonoBehaviour
         return false;
     }
 
+    /// <summary>
+    /// 두 정점 사이의 교차점을 계산해 VertexData를 구하는 함수
+    /// </summary>
+    /// <param name="vertexData1">정점1</param>
+    /// <param name="vertexData2">정점2</param>
+    /// <param name="planeOrigin">자를 평면</param>
+    /// <param name="normal">자를 평면의 노말값</param>
+    /// <returns>교차점이 구해졌다면 VertexData</returns>
     static VertexData GetIntersectionVertex(VertexData vertexData1, VertexData vertexData2, Vector3 planeOrigin, Vector3 normal)
     {
-        PointIntersectAPlane(vertexData1.Position,vertexData2.Position,planeOrigin,normal, out Vector3 result);
-        float distance1 = Vector3.Distance(vertexData1.Position, result);
-        float distance2 = Vector3.Distance(vertexData2.Position, result);
+        /*        PointIntersectAPlane(vertexData1.Position,vertexData2.Position,planeOrigin,normal, out Vector3 result);
+                float distance1 = Vector3.Distance(vertexData1.Position, result);
+                float distance2 = Vector3.Distance(vertexData2.Position, result);
 
-        float t = distance1 / (distance1 + distance2);
+                float t = distance1 / (distance1 + distance2);
 
-        return new VertexData()
+                return new VertexData()
+                {
+                    Position = result,
+                    Normal = normal,
+                    Uv = Vector2.Lerp(normal, result, t)    // 주의 https://medium.com/@hesmeron/mesh-slicing-in-unity-740b21ffdf84
+                    //https://blog.naver.com/shol9570/222224199117
+                };*/
+        // 두 정점 사이의 교차점 구하기
+        if (PointIntersectAPlane(vertexData1.Position, vertexData2.Position, planeOrigin, normal, out Vector3 result))
         {
-            Position = result,
-            Normal = normal,
-            Uv = Vector2.Lerp(normal, result, t)    // 주의 https://medium.com/@hesmeron/mesh-slicing-in-unity-740b21ffdf84
-            //https://blog.naver.com/shol9570/222224199117
-        };
+            // 교차점까지의 거리 계산
+            float totalDistance = (vertexData2.Position - vertexData1.Position).sqrMagnitude;
+            float distanceToIntersection = (result - vertexData1.Position).sqrMagnitude;
+            float t = distanceToIntersection / totalDistance;   // 비율 구하기
+
+            // Lerp로 교차점의 UV, Normal구하기
+            Vector2 interpolatedUv = Vector2.Lerp(vertexData1.Uv, vertexData2.Uv, t);
+            Vector3 interpolatedNomal = Vector3.Lerp(vertexData1.Normal, vertexData2.Normal, t);
+
+            return new VertexData()
+            {
+                Position = result,
+                Uv = interpolatedUv,
+                Normal = interpolatedNomal
+            };
+        }
+
+        return default(VertexData); 
+        
     }
     
 }
