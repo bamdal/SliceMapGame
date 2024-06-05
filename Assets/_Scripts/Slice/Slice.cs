@@ -117,23 +117,25 @@ public class Slice : MonoBehaviour
             normals.Add(vertexData.Normal);
             return vertices.Count -1;
         }
+
+
     }
 
-    public Mesh[] Slicer(MeshFilter meshFilter, Vector3 cutPoint, Vector3 nomal)
+    public Mesh[] Slicer(MeshFilter meshFilter, Vector3 cutPoint, Vector3 normal)
     {
-        Mesh originMesh = meshFilter.mesh;
+        Mesh originMesh = meshFilter.mesh;  // 매쉬 가져오고
 
-        Plane plane = new Plane(nomal, cutPoint);   // 오브젝트를 자를 평면
+        Plane plane = new Plane(normal, cutPoint);   // 오브젝트를 자를 평면
         SlicedObjectData positiveMesh = new SlicedObjectData(); // 잘린 오브젝트중 첫번째
         SlicedObjectData negativeMesh = new SlicedObjectData(); // 잘린 오브젝트중 두번째
 
-        Vector3[] originVertices = originMesh.vertices;
-        Vector3[] originNormals = originMesh.normals;
-        Vector2[] originUVs = originMesh.uv;
+        // 잘려진 정점들을 저장하는 리스트
+        List<VertexData> pointsSlicedPlane = new List<VertexData>();
 
         // 폴리곤 가져오기
         int[] meshTriangles = originMesh.triangles;
 
+        // 정점별로 계산시작
         for (int i = 0; i < meshTriangles.Length; i+=3)
         {
             VertexData vertexData1 = GetVertexData(originMesh,plane, meshTriangles[i]);
@@ -149,6 +151,59 @@ public class Slice : MonoBehaviour
                 SlicedObjectData slicedObjectData = vertexData1.Side ? positiveMesh : negativeMesh; // 첫번째 슬라이스인지 두번째 슬라이스인지 구하고
                 slicedObjectData.AddMeshSection(vertexData1,vertexData2,vertexData3);               // 해당하는 슬라이스에 폴리곤 데이터 저장
             }
+            else
+            {
+                // plane에 잘리게된 면들 계산시작
+
+                // 각 정점들이 positive에 갈지 negative에 갈지 구별
+                SlicedObjectData slicedObjectData1 = vertexData1.Side? positiveMesh : negativeMesh;
+                SlicedObjectData slicedObjectData2 = vertexData2.Side? positiveMesh : negativeMesh;
+                SlicedObjectData slicedObjectData3 = vertexData3.Side? positiveMesh : negativeMesh;
+
+                // 평면으로 잘리게된 지점에 대한 정보를 담는 교차점
+                VertexData intersection1;
+                VertexData intersection2;
+
+                // 반으로 가른 매쉬중 어느 매쉬로 갈지 결정
+                if (is12SameSide)
+                {
+                    // 교차점 구하기
+                    intersection1 = GetIntersectionVertex(vertexData1, vertexData3, cutPoint, normal);
+                    intersection2 = GetIntersectionVertex(vertexData2, vertexData3, cutPoint, normal);
+
+                    // 구해진 교차점으로 정점들을 넣어서 하나의 폴리곤으로 만든후 메쉬에 넣기
+                    // 정점들 순서대로 입력 반드시 중요함
+                    slicedObjectData1.AddMeshSection(vertexData1 ,vertexData2, intersection2);      // positive
+                    slicedObjectData1.AddMeshSection(vertexData1, intersection2, intersection1);    // positive
+                    slicedObjectData3.AddMeshSection(intersection2, vertexData3, intersection1);     // negative
+                }
+                else if (is23SameSide)
+                {
+                    intersection1 = GetIntersectionVertex(vertexData2, vertexData1, cutPoint, normal);
+                    intersection2 = GetIntersectionVertex(vertexData3, vertexData1, cutPoint, normal);
+
+                    slicedObjectData1.AddMeshSection(intersection2, vertexData1, intersection1);        // positive
+                    slicedObjectData2.AddMeshSection(vertexData2, vertexData3, intersection2);          // negative
+                    slicedObjectData2.AddMeshSection(vertexData2, intersection2, intersection1);        // negative
+                }
+                else
+                {
+                    // 1,3이 같은 매쉬로 통합된다
+                    intersection1 = GetIntersectionVertex(vertexData1, vertexData2, cutPoint, normal);
+                    intersection2 = GetIntersectionVertex(vertexData3, vertexData2, cutPoint, normal);
+
+                    slicedObjectData1.AddMeshSection(intersection1, intersection2, vertexData1 );        // negative
+                    slicedObjectData2.AddMeshSection(vertexData2, intersection2, intersection1);        // positive
+                    slicedObjectData1.AddMeshSection(vertexData1, intersection2,vertexData3);        // negative
+                }
+
+                // 잘려진 정점들을 리스트에 저장한다.
+                pointsSlicedPlane.Add(intersection1);
+                pointsSlicedPlane.Add(intersection2);
+            }
+
+            //JoinPointsAlongPlane(ref positiveMesh,ref negativeMesh, normal, pointsSlicedPlane);
+
         }
 
         // 잘린 두개의 매쉬를 리턴
@@ -178,6 +233,7 @@ public class Slice : MonoBehaviour
             result = from + translation;
             return true;
         }
+
 
         result = Vector3.zero;
         return false;
@@ -210,8 +266,8 @@ public class Slice : MonoBehaviour
         if (PointIntersectAPlane(vertexData1.Position, vertexData2.Position, planeOrigin, normal, out Vector3 result))
         {
             // 교차점까지의 거리 계산
-            float totalDistance = (vertexData2.Position - vertexData1.Position).sqrMagnitude;
-            float distanceToIntersection = (result - vertexData1.Position).sqrMagnitude;
+            float totalDistance = (vertexData2.Position - vertexData1.Position).sqrMagnitude;   // 총 거리비율
+            float distanceToIntersection = (result - vertexData1.Position).sqrMagnitude;        // 교차점 까지의 거리비율
             float t = distanceToIntersection / totalDistance;   // 비율 구하기
 
             // Lerp로 교차점의 UV, Normal구하기
@@ -229,5 +285,92 @@ public class Slice : MonoBehaviour
         return default(VertexData); 
         
     }
-    
+
+    public void AddPolygon(List<VertexData> vertexDataList, Vector3 normal)
+    {
+        Vector3 center = Vector3.zero;
+        foreach (var vertexData in vertexDataList)
+        {
+            center += vertexData.Position;
+        }
+        center /= vertexDataList.Count;
+
+
+    }
+
+
+    private static void JoinPointsAlongPlane(ref SlicedObjectData positive, ref SlicedObjectData negative, Vector3 cutNormal, List<VertexData> vertexDataList)
+    {
+        VertexData halfway = new VertexData()
+        {
+            Position = GetHalfwayPoint(vertexDataList)
+        };
+
+        for (int i = 0; i < vertexDataList.Count; i += 2)
+        {
+            VertexData firstVertex = vertexDataList[i];
+            VertexData secondVertex = vertexDataList[i + 1];
+
+            Vector3 normal = ComputeNormal(halfway, secondVertex, firstVertex);
+            halfway.Normal = Vector3.forward;
+
+            float dot = Vector3.Dot(normal, cutNormal);
+            //we check which side of our plane the calculated normal is
+            //and we add new triangle to both construction helpers 
+            //in different order do that they face diffewrent directions
+
+            if (dot > 0)
+            {
+                //used if calculated normal aligns with plane normal                           
+                positive.AddMeshSection(firstVertex, secondVertex, halfway);
+                negative.AddMeshSection(secondVertex, firstVertex, halfway);
+            }
+            else
+            {
+                //used if calculated normal is opposite to plane normal
+                negative.AddMeshSection(firstVertex, secondVertex, halfway);
+                positive.AddMeshSection(secondVertex, firstVertex, halfway);
+            }
+        }
+    }
+
+    public static Vector3 GetHalfwayPoint(List<VertexData> vertexDataList)
+    {
+        if (vertexDataList.Count > 0)
+        {
+            Vector3 firstPoint = vertexDataList[0].Position;
+            Vector3 furthestPoint = Vector3.zero;
+            float distance = 0f;
+
+            for (int index = 0; index < vertexDataList.Count; index++)
+            {
+                Vector3 point = vertexDataList[index].Position;
+                float currentDistance = 0f;
+                currentDistance = Vector3.Distance(firstPoint, point);
+
+                if (currentDistance > distance)
+                {
+                    distance = currentDistance;
+                    furthestPoint = point;
+                }
+            }
+
+            return Vector3.Lerp(firstPoint, furthestPoint, 0.5f);
+        }
+        else
+        {
+            return Vector3.zero;
+        }
+    }
+
+    public static Vector3 ComputeNormal(VertexData vertexA, VertexData vertexB, VertexData vertexC)
+    {
+        Vector3 sideL = vertexB.Position - vertexA.Position;
+        Vector3 sideR = vertexC.Position - vertexA.Position;
+
+        Vector3 normal = Vector3.Cross(sideL, sideR);
+
+        return normal.normalized;
+    }
+
 }
