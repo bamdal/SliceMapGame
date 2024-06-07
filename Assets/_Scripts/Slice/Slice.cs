@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,7 +31,17 @@ public class Slice : MonoBehaviour
     /// <returns></returns>
     static VertexData GetVertexData(Mesh mesh, Plane plane, int index)
     {
+        if (index < 0 || index >= mesh.vertexCount)
+        {
+            throw new IndexOutOfRangeException($"Index {index} is out of bounds for mesh vertices.");
+        }
+
         Vector3 position = mesh.vertices[index];
+        if (mesh.uv.Length < mesh.vertexCount)
+        {
+            mesh.uv = new Vector2[mesh.vertexCount];
+        }
+
         VertexData vertexData = new VertexData()
         {
             Position = position,
@@ -123,8 +134,7 @@ public class Slice : MonoBehaviour
 
     public Mesh[] Slicer(MeshFilter meshFilter, Vector3 cutPoint, Vector3 normal)
     {
-        Mesh originMesh = meshFilter.mesh;  // 매쉬 가져오고
-
+        Mesh originMesh = meshFilter.sharedMesh;  // 매쉬 가져오고
         Plane plane = new Plane(normal, cutPoint);   // 오브젝트를 자를 평면
         SlicedObjectData positiveMesh = new SlicedObjectData(); // 잘린 오브젝트중 첫번째
         SlicedObjectData negativeMesh = new SlicedObjectData(); // 잘린 오브젝트중 두번째
@@ -138,6 +148,8 @@ public class Slice : MonoBehaviour
         // 정점별로 계산시작
         for (int i = 0; i < meshTriangles.Length; i+=3)
         {
+
+
             VertexData vertexData1 = GetVertexData(originMesh,plane, meshTriangles[i]);
             VertexData vertexData2 = GetVertexData(originMesh,plane, meshTriangles[i+1]);
             VertexData vertexData3 = GetVertexData(originMesh,plane, meshTriangles[i+2]);
@@ -202,10 +214,10 @@ public class Slice : MonoBehaviour
                 pointsSlicedPlane.Add(intersection2);
             }
 
-            //JoinPointsAlongPlane(ref positiveMesh,ref negativeMesh, normal, pointsSlicedPlane);
+
 
         }
-
+        JoinPointsAlongPlane(ref positiveMesh, ref negativeMesh, normal, pointsSlicedPlane);
         // 잘린 두개의 매쉬를 리턴
         return new[] { positiveMesh.GetSlicedObjectMesh(), negativeMesh.GetSlicedObjectMesh() };
     }
@@ -298,68 +310,54 @@ public class Slice : MonoBehaviour
 
     }
 
-
+    /// <summary>
+    /// 자른 평면을 매꾸는 함수
+    /// </summary>
+    /// <param name="positive">쪼개진 사각형중 하나</param>
+    /// <param name="negative">쪼개진 사각형중 하나</param>
+    /// <param name="cutNormal">자른 평면의 노말값</param>
+    /// <param name="vertexDataList">잘린 부분의 정점으로 이뤄진 리스트</param>
     private static void JoinPointsAlongPlane(ref SlicedObjectData positive, ref SlicedObjectData negative, Vector3 cutNormal, List<VertexData> vertexDataList)
     {
+        // 리스트의 첫번째 지점과 나머지 지점들을 연결한다
         VertexData halfway = new VertexData()
         {
-            Position = GetHalfwayPoint(vertexDataList)
+            Position = vertexDataList[0].Position
         };
 
-        for (int i = 0; i < vertexDataList.Count; i += 2)
+        /*
+             for (int i = 2; i < vertexDataList.Count - 1; i++)
+    {
+        VertexData firstVertex = vertexDataList[i];
+        VertexData secondVertex = vertexDataList[i + 1];
+         */
+
+        // 잘린 지점을 따라 삼각형을 생성
+        for (int i = 1; i < vertexDataList.Count; i++)
         {
             VertexData firstVertex = vertexDataList[i];
-            VertexData secondVertex = vertexDataList[i + 1];
+            VertexData secondVertex = vertexDataList[(i + 1) % vertexDataList.Count];
 
+            // 교차점의 노멀 벡터는 자르는 평면의 노멀 벡터를 사용
+            firstVertex.Normal = cutNormal;
+            secondVertex.Normal = cutNormal;
+
+            // 삼각형의 정점 순서에 따라 폴리곤 추가
             Vector3 normal = ComputeNormal(halfway, secondVertex, firstVertex);
-            halfway.Normal = Vector3.forward;
-
             float dot = Vector3.Dot(normal, cutNormal);
-            //we check which side of our plane the calculated normal is
-            //and we add new triangle to both construction helpers 
-            //in different order do that they face diffewrent directions
 
             if (dot > 0)
             {
-                //used if calculated normal aligns with plane normal                           
+                // 평면 노멀과 일치하는 경우
                 positive.AddMeshSection(firstVertex, secondVertex, halfway);
                 negative.AddMeshSection(secondVertex, firstVertex, halfway);
             }
             else
             {
-                //used if calculated normal is opposite to plane normal
+                // 평면 노멀과 반대인 경우
                 negative.AddMeshSection(firstVertex, secondVertex, halfway);
                 positive.AddMeshSection(secondVertex, firstVertex, halfway);
             }
-        }
-    }
-
-    public static Vector3 GetHalfwayPoint(List<VertexData> vertexDataList)
-    {
-        if (vertexDataList.Count > 0)
-        {
-            Vector3 firstPoint = vertexDataList[0].Position;
-            Vector3 furthestPoint = Vector3.zero;
-            float distance = 0f;
-
-            for (int index = 0; index < vertexDataList.Count; index++)
-            {
-                Vector3 point = vertexDataList[index].Position;
-                float currentDistance = 0f;
-                currentDistance = Vector3.Distance(firstPoint, point);
-
-                if (currentDistance > distance)
-                {
-                    distance = currentDistance;
-                    furthestPoint = point;
-                }
-            }
-
-            return Vector3.Lerp(firstPoint, furthestPoint, 0.5f);
-        }
-        else
-        {
-            return Vector3.zero;
         }
     }
 

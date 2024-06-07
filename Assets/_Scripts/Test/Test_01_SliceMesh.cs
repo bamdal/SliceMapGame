@@ -21,6 +21,7 @@ public class Test_01_SliceMesh : TestBase
         }
     }
     [CustomEditor(typeof(Test_01_SliceMesh))]
+#if UNITY_EDITOR
     public class MeshSlicerEditor : Editor
     {
         public override void OnInspectorGUI()
@@ -52,11 +53,13 @@ public class Test_01_SliceMesh : TestBase
         //if all faces where created correctly 
         Gizmos.color = Color.blue;
         Gizmos.matrix = transform.localToWorldMatrix;
+        /*
         for (int i = 0; i < Filter.sharedMesh.normals.Length; i++)
         {
             Vector3 normal = Filter.sharedMesh.normals[i];
             Vector3 vertex = Filter.sharedMesh.vertices[i];
             Gizmos.DrawLine(vertex, vertex + normal);
-        }
+        }*/
     }
+#endif
 }
