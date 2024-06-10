@@ -5,26 +5,13 @@ using UnityEngine;
 
 public class GameManager : Singleton<GameManager>
 {
-/*    Player player;
-
-
-
-
-
-
-
-
-    protected override void OnPreInitialize()
-    {
-        base.OnPreInitialize();
-
-    }
+    Player player;
 
     public Player Player
     {
         get
         {
-            if(player == null)
+            if (player == null)
             {
                 player = FindAnyObjectByType<Player>();
             }
@@ -32,9 +19,26 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+
+
+    Slice slicer;
+
+    public Slice Slicer
+    {
+        get
+        {
+            if (slicer == null)
+            {
+                slicer = GetComponent<Slice>();
+            }
+            return slicer;
+        }
+    }
     protected override void OnInitialize()
     {
+        slicer = GetComponent<Slice>();
         player = FindAnyObjectByType<Player>();
 
-    }*/
+    }
+
 }

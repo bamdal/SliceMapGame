@@ -9,19 +9,25 @@ public class Test_01_SliceMesh : TestBase
     public MeshFilter Filter;
     public Vector3 point;
     public Vector3 normal;
+
+
+#if UNITY_EDITOR
     public void SliceMesh()
     {
         Mesh[] meshes = Slicer.Slicer(Filter, point, normal);
         for (int index = 0; index < meshes.Length; index++)
         {
             Mesh mesh = meshes[index];
+            
             GameObject submesh = Instantiate(this.gameObject);
-            submesh.gameObject.transform.position += (2 * transform.right);
-            submesh.GetComponent<MeshFilter>().sharedMesh = mesh;
+            //submesh.gameObject.transform.position += (2 * transform.right); // 소환 위치
+            MeshFilter filter =  submesh.GetComponent<MeshFilter>();   // 메시 적용
+            filter.sharedMesh = mesh;
+
         }
+        //gameObject.SetActive(false);
     }
     [CustomEditor(typeof(Test_01_SliceMesh))]
-#if UNITY_EDITOR
     public class MeshSlicerEditor : Editor
     {
         public override void OnInspectorGUI()

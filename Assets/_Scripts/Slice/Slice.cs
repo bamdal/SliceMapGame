@@ -217,7 +217,14 @@ public class Slice : MonoBehaviour
 
 
         }
-        JoinPointsAlongPlane(ref positiveMesh, ref negativeMesh, normal, pointsSlicedPlane);
+        if (pointsSlicedPlane.Count > 0)
+        {
+            JoinPointsAlongPlane(ref positiveMesh, ref negativeMesh, normal, pointsSlicedPlane);
+        }else
+        {
+
+            return null;
+        }
         // 잘린 두개의 매쉬를 리턴
         return new[] { positiveMesh.GetSlicedObjectMesh(), negativeMesh.GetSlicedObjectMesh() };
     }
@@ -298,7 +305,7 @@ public class Slice : MonoBehaviour
         
     }
 
-    public void AddPolygon(List<VertexData> vertexDataList, Vector3 normal)
+/*    public void AddPolygon(List<VertexData> vertexDataList, Vector3 normal)
     {
         Vector3 center = Vector3.zero;
         foreach (var vertexData in vertexDataList)
@@ -308,7 +315,7 @@ public class Slice : MonoBehaviour
         center /= vertexDataList.Count;
 
 
-    }
+    }*/
 
     /// <summary>
     /// 자른 평면을 매꾸는 함수
