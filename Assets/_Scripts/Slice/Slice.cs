@@ -132,6 +132,13 @@ public class Slice : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="meshFilter"></param>
+    /// <param name="cutPoint"></param>
+    /// <param name="normal"></param>
+    /// <returns></returns>
     public Mesh[] Slicer(MeshFilter meshFilter, Vector3 cutPoint, Vector3 normal)
     {
         Mesh originMesh = meshFilter.sharedMesh;  // 매쉬 가져오고

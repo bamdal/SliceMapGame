@@ -14,7 +14,7 @@ public class Test_01_SliceMesh : TestBase
 #if UNITY_EDITOR
     public void SliceMesh()
     {
-        Mesh[] meshes = Slicer.Slicer(Filter, point, normal);
+        Mesh[] meshes = Slicer.Slicer(Filter, point - transform.position, normal);
         for (int index = 0; index < meshes.Length; index++)
         {
             Mesh mesh = meshes[index];
@@ -50,15 +50,15 @@ public class Test_01_SliceMesh : TestBase
         Gizmos.matrix = Matrix4x4.TRS(transform.position, Quaternion.LookRotation(normal), Vector3.one);
         //We draw cubes that will now represent our slicing plane
         Gizmos.color = new Color(0, 1, 0, 0.4f);
-        Gizmos.DrawCube(point, new Vector3(2, 2, 0.01f));
+
+        Gizmos.DrawCube((point - transform.position) * transform.localScale.x, new Vector3(2, 2, 0.0001f));
         Gizmos.color = new Color(0, 1, 0, 1f);
-        Gizmos.DrawWireCube(point, new Vector3(2, 2, 0.01f));
+        Gizmos.DrawWireCube( (point - transform.position) * transform.localScale.x, new Vector3(2, 2, 0.0001f));
         //We set matrix to our object matrix and draw all of the normals.
         //It will be especially usefull after we start
         //slicing mesh and have to check
         //if all faces where created correctly 
-        Gizmos.color = Color.blue;
-        Gizmos.matrix = transform.localToWorldMatrix;
+
         /*
         for (int i = 0; i < Filter.sharedMesh.normals.Length; i++)
         {
