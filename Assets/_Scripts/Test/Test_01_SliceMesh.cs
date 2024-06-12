@@ -12,7 +12,7 @@ public class Test_01_SliceMesh : TestBase
 
 
 #if UNITY_EDITOR
-    public void SliceMesh()
+/*    public void SliceMesh()
     {
         Mesh[] meshes = Slicer.Slicer(Filter, point - transform.position, normal);
         for (int index = 0; index < meshes.Length; index++)
@@ -26,7 +26,7 @@ public class Test_01_SliceMesh : TestBase
 
         }
         //gameObject.SetActive(false);
-    }
+    }*/
     [CustomEditor(typeof(Test_01_SliceMesh))]
     public class MeshSlicerEditor : Editor
     {
@@ -38,7 +38,7 @@ public class Test_01_SliceMesh : TestBase
             if (GUILayout.Button("Slice mesh"))
             {
                 Undo.RecordObject(meshSlicer, "Slice");
-                meshSlicer.SliceMesh();
+                //meshSlicer.SliceMesh();
                 EditorUtility.SetDirty(meshSlicer);
             }
         }

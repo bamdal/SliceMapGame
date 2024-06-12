@@ -80,56 +80,12 @@ public class Test_03_CuttingRay : TestBase
     protected override void OnTest1(InputAction.CallbackContext context)
     {
         
-        Mesh[] meshes = slice.Slicer(filter, new Vector3(transform.position.x, transform.position.y - knifeSize, transform.position.z),plane1.normal);
-        if(meshes !=null)
-        for (int index = 0; index < meshes.Length; index++)
-        {
-            Mesh mesh = meshes[index];
 
-            GameObject submesh = Instantiate(this.gameObject);
-            //submesh.gameObject.transform.position += (2 * transform.right); // 소환 위치
-            MeshFilter filter = submesh.GetComponent<MeshFilter>();   // 메시 적용
-            filter.sharedMesh = mesh;
+    }
 
-        }
-        meshes = slice.Slicer(filter, new Vector3(transform.position.x, transform.position.y + knifeSize, transform.position.z), plane2.normal);
-        if (meshes != null)
-            for (int index = 0; index < meshes.Length; index++)
-        {
-            Mesh mesh = meshes[index];
-
-            GameObject submesh = Instantiate(this.gameObject);
-            //submesh.gameObject.transform.position += (2 * transform.right); // 소환 위치
-            MeshFilter filter = submesh.GetComponent<MeshFilter>();   // 메시 적용
-            filter.sharedMesh = mesh;
-
-        }
-        meshes = slice.Slicer(filter, new Vector3(transform.position.x - knifeSize, transform.position.y, transform.position.z), plane3.normal);
-        if (meshes != null)
-            for (int index = 0; index < meshes.Length; index++)
-        {
-            Mesh mesh = meshes[index];
-
-            GameObject submesh = Instantiate(this.gameObject);
-            //submesh.gameObject.transform.position += (2 * transform.right); // 소환 위치
-            MeshFilter filter = submesh.GetComponent<MeshFilter>();   // 메시 적용
-            filter.sharedMesh = mesh;
-
-        }
-        meshes = slice.Slicer(filter, new Vector3(transform.position.x + knifeSize, transform.position.y, transform.position.z), plane4.normal);
-        if (meshes != null)
-            for (int index = 0; index < meshes.Length; index++)
-        {
-            Mesh mesh = meshes[index];
-
-            GameObject submesh = Instantiate(this.gameObject);
-            //submesh.gameObject.transform.position += (2 * transform.right); // 소환 위치
-            MeshFilter filter = submesh.GetComponent<MeshFilter>();   // 메시 적용
-            filter.sharedMesh = mesh;
-
-        }
-
-
-
+    protected override void OnTest2(InputAction.CallbackContext context)
+    {
+        Player player = GameManager.Instance.Player;
+        player.TakePicture();
     }
 }

@@ -10,6 +10,6 @@ public class Test_02_CuttingMap : TestBase
     public Vector3 normal = new(0,1,0);
     protected override void OnTest1(InputAction.CallbackContext context)
     {
-        sliceObject.SliceMesh(point, normal);
+        //sliceObject.SliceMesh(point, normal);
     }
 }

@@ -18,9 +18,10 @@ public class SliceObject : MonoBehaviour
         Slicer = GameManager.Instance.Slicer;
     }
 
-    public void SliceMesh(Vector3 point, Vector3 normal)
+    public void SliceMesh(Plane plane)
     {
-        Mesh[] meshes = Slicer.Slicer(Filter, point, normal);
+
+        Mesh[] meshes = Slicer.Slicer(Filter,plane);
         if (meshes != null)
         {
             for (int index = 0; index < meshes.Length; index++)

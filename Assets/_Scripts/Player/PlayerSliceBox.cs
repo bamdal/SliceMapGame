@@ -41,11 +41,11 @@ public class PlayerSliceBox : MonoBehaviour
                     point = dir;
                     Debug.Log(dir);
                 }
-
+/*
                 slice.SliceMesh(point.normalized, player.transform.up);
                 slice.SliceMesh(point.normalized, -player.transform.up);
                 slice.SliceMesh(point.normalized, player.transform.right);
-                slice.SliceMesh(point.normalized, -player.transform.right);
+                slice.SliceMesh(point.normalized, -player.transform.right);*/
                 StartCoroutine(Delay());
             }
         }

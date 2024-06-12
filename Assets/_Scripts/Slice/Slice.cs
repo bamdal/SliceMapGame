@@ -133,16 +133,15 @@ public class Slice : MonoBehaviour
     }
 
     /// <summary>
-    /// 
+    /// plane이 지금 월드 좌표 기준이 아니라 로컬기준으로 계산을 해버려서  잘못된 결과 나옴
     /// </summary>
     /// <param name="meshFilter"></param>
     /// <param name="cutPoint"></param>
     /// <param name="normal"></param>
     /// <returns></returns>
-    public Mesh[] Slicer(MeshFilter meshFilter, Vector3 cutPoint, Vector3 normal)
+    public Mesh[] Slicer(MeshFilter meshFilter, Plane plane)
     {
         Mesh originMesh = meshFilter.sharedMesh;  // 매쉬 가져오고
-        Plane plane = new Plane(normal, cutPoint);   // 오브젝트를 자를 평면
         SlicedObjectData positiveMesh = new SlicedObjectData(); // 잘린 오브젝트중 첫번째
         SlicedObjectData negativeMesh = new SlicedObjectData(); // 잘린 오브젝트중 두번째
 
@@ -187,8 +186,8 @@ public class Slice : MonoBehaviour
                 if (is12SameSide)
                 {
                     // 교차점 구하기
-                    intersection1 = GetIntersectionVertex(vertexData1, vertexData3, cutPoint, normal);
-                    intersection2 = GetIntersectionVertex(vertexData2, vertexData3, cutPoint, normal);
+                    intersection1 = GetIntersectionVertex(vertexData1, vertexData3, plane);
+                    intersection2 = GetIntersectionVertex(vertexData2, vertexData3, plane);
 
                     // 구해진 교차점으로 정점들을 넣어서 하나의 폴리곤으로 만든후 메쉬에 넣기
                     // 정점들 순서대로 입력 반드시 중요함
@@ -198,8 +197,8 @@ public class Slice : MonoBehaviour
                 }
                 else if (is23SameSide)
                 {
-                    intersection1 = GetIntersectionVertex(vertexData2, vertexData1, cutPoint, normal);
-                    intersection2 = GetIntersectionVertex(vertexData3, vertexData1, cutPoint, normal);
+                    intersection1 = GetIntersectionVertex(vertexData2, vertexData1, plane);
+                    intersection2 = GetIntersectionVertex(vertexData3, vertexData1, plane);
 
                     slicedObjectData1.AddMeshSection(intersection2, vertexData1, intersection1);        // positive
                     slicedObjectData2.AddMeshSection(vertexData2, vertexData3, intersection2);          // negative
@@ -208,8 +207,8 @@ public class Slice : MonoBehaviour
                 else
                 {
                     // 1,3이 같은 매쉬로 통합된다
-                    intersection1 = GetIntersectionVertex(vertexData1, vertexData2, cutPoint, normal);
-                    intersection2 = GetIntersectionVertex(vertexData3, vertexData2, cutPoint, normal);
+                    intersection1 = GetIntersectionVertex(vertexData1, vertexData2, plane);
+                    intersection2 = GetIntersectionVertex(vertexData3, vertexData2, plane);
 
                     slicedObjectData1.AddMeshSection(intersection1, intersection2, vertexData1 );        // negative
                     slicedObjectData2.AddMeshSection(vertexData2, intersection2, intersection1);        // positive
@@ -226,7 +225,7 @@ public class Slice : MonoBehaviour
         }
         if (pointsSlicedPlane.Count > 0)
         {
-            JoinPointsAlongPlane(ref positiveMesh, ref negativeMesh, normal, pointsSlicedPlane);
+            JoinPointsAlongPlane(ref positiveMesh, ref negativeMesh, plane.normal, pointsSlicedPlane);
         }else
         {
 
@@ -245,16 +244,18 @@ public class Slice : MonoBehaviour
     /// <param name="normal">자르는 평면의 노말값</param>
     /// <param name="result">잘린 지점, 교차점 위치</param>
     /// <returns>성공적으로 지점을 구했으면 true 아니면 false</returns>
-    public static bool PointIntersectAPlane(Vector3 from , Vector3 to, Vector3 planeOrigin, Vector3 normal, out Vector3 result)
+    public static bool PointIntersectAPlane(Vector3 from , Vector3 to, Plane plane, out Vector3 result)
     {
         Vector3 translation = to - from; // from  -> to 방향벡터
-        float dot = Vector3.Dot(normal, translation);   // 노말벡터와의 내적 계산
+        float dot = Vector3.Dot(plane.normal, translation);   // 노말벡터와의 내적 계산
 
         // 두 벡터가 수직이 아닐때
         if (Mathf.Abs(dot) > Mathf.Epsilon)
         {
-            Vector3 fromOrigin = from - planeOrigin;    // 잘린지점에서 from 방향벡터
-            float fac = -Vector3.Dot(normal, fromOrigin) / dot; // 비율 구하기
+            
+            Vector3 pointOnPlane =  plane.ClosestPointOnPlane(from);
+            Vector3 fromOrigin = from - pointOnPlane;    // 잘린지점에서 from 방향벡터
+            float fac = -Vector3.Dot(plane.normal, fromOrigin) / dot; // 비율 구하기
             translation *= fac;                             // 방향벡터를 구한후 비율을 곱해서 나온 result가 잘린 지점이다
             result = from + translation;
             return true;
@@ -273,7 +274,7 @@ public class Slice : MonoBehaviour
     /// <param name="planeOrigin">자를 평면</param>
     /// <param name="normal">자를 평면의 노말값</param>
     /// <returns>교차점이 구해졌다면 VertexData</returns>
-    static VertexData GetIntersectionVertex(VertexData vertexData1, VertexData vertexData2, Vector3 planeOrigin, Vector3 normal)
+    static VertexData GetIntersectionVertex(VertexData vertexData1, VertexData vertexData2, Plane plane)
     {
         /*        PointIntersectAPlane(vertexData1.Position,vertexData2.Position,planeOrigin,normal, out Vector3 result);
                 float distance1 = Vector3.Distance(vertexData1.Position, result);
@@ -289,7 +290,7 @@ public class Slice : MonoBehaviour
                     //https://blog.naver.com/shol9570/222224199117
                 };*/
         // 두 정점 사이의 교차점 구하기
-        if (PointIntersectAPlane(vertexData1.Position, vertexData2.Position, planeOrigin, normal, out Vector3 result))
+        if (PointIntersectAPlane(vertexData1.Position, vertexData2.Position, plane, out Vector3 result))
         {
             // 교차점까지의 거리 계산
             float totalDistance = (vertexData2.Position - vertexData1.Position).sqrMagnitude;   // 총 거리비율
