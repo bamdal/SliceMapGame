@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,8 @@ public class PlayerSliceBox : MonoBehaviour
     /// </summary>
     BoxCollider slicerBox;
 
+    public BoxCollider SlicerBox => slicerBox;
+
 
     Vector3 point;
 
@@ -16,6 +19,8 @@ public class PlayerSliceBox : MonoBehaviour
     Player player;
 
     bool delay = true;
+
+    public Action<Collider> onColliderInTrigger;
     private void Awake()
     {
         slicerBox = GetComponent<BoxCollider>();
@@ -23,7 +28,17 @@ public class PlayerSliceBox : MonoBehaviour
 
     private void Start()
     {
-        player= GameManager.Instance.Player;
+        player = GameManager.Instance.Player;
+        slicerBox.size = player.boxSize;
+        slicerBox.center = player.boxCenter;
+        slicerBox.enabled = false;
+    }
+
+    public void CheackSlice()
+    {
+        slicerBox.enabled = true;
+        Delay(0.1f);
+
     }
 
     private void OnTriggerEnter(Collider other)
@@ -31,30 +46,33 @@ public class PlayerSliceBox : MonoBehaviour
         if (delay)
         {
             delay = false;
+            StartCoroutine(Delay(1.0f));
             SliceObject slice = other.GetComponent<SliceObject>();
             BoxCollider box = other.GetComponent<BoxCollider>();
             if (slice != null)
             {
-                if (Physics.ComputePenetration(slicerBox, slicerBox.transform.position, slicerBox.transform.rotation, box, box.transform.position, box.transform.rotation
-                    ,out Vector3 dir, out float distance))
-                {
-                    point = dir;
-                    Debug.Log(dir);
-                }
-/*
-                slice.SliceMesh(point.normalized, player.transform.up);
-                slice.SliceMesh(point.normalized, -player.transform.up);
-                slice.SliceMesh(point.normalized, player.transform.right);
-                slice.SliceMesh(point.normalized, -player.transform.right);*/
-                StartCoroutine(Delay());
+                onColliderInTrigger?.Invoke(other);
             }
         }
 
     }
 
-    IEnumerator Delay()
+    IEnumerator Delay(float countDelay)
     {
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(countDelay);
+        slicerBox.enabled = false;
         delay = true;
+    }
+
+    private void OnDrawGizmos()
+    {
+        // BoxCollider 기즈모 그리기
+        BoxCollider boxCollider = GetComponent<BoxCollider>();
+        if (boxCollider != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.matrix = Matrix4x4.TRS(transform.position, transform.rotation, transform.localScale);
+            Gizmos.DrawWireCube(boxCollider.center, boxCollider.size);
+        }
     }
 }

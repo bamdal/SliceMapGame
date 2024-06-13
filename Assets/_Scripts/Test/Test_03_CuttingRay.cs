@@ -5,87 +5,93 @@ using UnityEngine.InputSystem;
 
 public class Test_03_CuttingRay : TestBase
 {
-    /// <summary>
-    /// 칼날의 크기(원점에서 떨어진 거리)
-    /// </summary>
-    public float knifeSize = 2.0f;
+    /*    /// <summary>
+        /// 칼날의 크기(원점에서 떨어진 거리)
+        /// </summary>
+        public float knifeSize = 2.0f;
 
-    Slice slice;
+        Slice slice;
 
-    public MeshFilter filter;
+        public MeshFilter filter;
 
-    Plane plane1;
-    Plane plane2;
-    Plane plane3;
-    Plane plane4;
-    private void Start()
-    {
-        slice = GameManager.Instance.Slicer;
+        Plane plane1;
+        Plane plane2;
+        Plane plane3;
+        Plane plane4;
+        private void Start()
+        {
+            slice = GameManager.Instance.Slicer;
 
-        plane1 = new Plane(transform.up, new Vector3(transform.position.x, transform.position.y - knifeSize, transform.position.z));
-        plane2 = new Plane(-transform.up, new Vector3(transform.position.x, transform.position.y + knifeSize, transform.position.z));
-        plane3 = new Plane(transform.right, new Vector3(transform.position.x - knifeSize, transform.position.y, transform.position.z));
-        plane4 = new Plane(-transform.right, new Vector3(transform.position.x + knifeSize, transform.position.y, transform.position.z));
+            plane1 = new Plane(transform.up, new Vector3(transform.position.x, transform.position.y - knifeSize, transform.position.z));
+            plane2 = new Plane(-transform.up, new Vector3(transform.position.x, transform.position.y + knifeSize, transform.position.z));
+            plane3 = new Plane(transform.right, new Vector3(transform.position.x - knifeSize, transform.position.y, transform.position.z));
+            plane4 = new Plane(-transform.right, new Vector3(transform.position.x + knifeSize, transform.position.y, transform.position.z));
 
-        // 평면 게임 오브젝트 생성 및 설정
-        CreatePlaneObject(plane1, new Vector3(transform.position.x, transform.position.y - knifeSize, transform.position.z), transform.up);
-        CreatePlaneObject(plane2, new Vector3(transform.position.x, transform.position.y + knifeSize, transform.position.z), -transform.up);
-        CreatePlaneObject(plane3, new Vector3(transform.position.x - knifeSize, transform.position.y, transform.position.z), transform.right);
-        CreatePlaneObject(plane4, new Vector3(transform.position.x + knifeSize, transform.position.y, transform.position.z), -transform.right);
-    }
-    void CreatePlaneObject(Plane plane, Vector3 position, Vector3 normal)
-    {
-        GameObject planeObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        planeObject.transform.position = position;
-        planeObject.transform.up = normal;
+            // 평면 게임 오브젝트 생성 및 설정
+            CreatePlaneObject(plane1, new Vector3(transform.position.x, transform.position.y - knifeSize, transform.position.z), transform.up);
+            CreatePlaneObject(plane2, new Vector3(transform.position.x, transform.position.y + knifeSize, transform.position.z), -transform.up);
+            CreatePlaneObject(plane3, new Vector3(transform.position.x - knifeSize, transform.position.y, transform.position.z), transform.right);
+            CreatePlaneObject(plane4, new Vector3(transform.position.x + knifeSize, transform.position.y, transform.position.z), -transform.right);
+        }
+        void CreatePlaneObject(Plane plane, Vector3 position, Vector3 normal)
+        {
+            GameObject planeObject = GameObject.CreatePrimitive(PrimitiveType.Plane);
+            planeObject.transform.position = position;
+            planeObject.transform.up = normal;
 
-        // 필요에 따라 크기 조정
-        planeObject.transform.localScale = new Vector3(1, 1, 1);
+            // 필요에 따라 크기 조정
+            planeObject.transform.localScale = new Vector3(1, 1, 1);
 
-        // 필요에 따라 머터리얼 설정
-        // Material material = new Material(Shader.Find("Standard"));
-        // material.color = Color.white;
-        // planeObject.GetComponent<Renderer>().material = material;
-    }
+            // 필요에 따라 머터리얼 설정
+            // Material material = new Material(Shader.Find("Standard"));
+            // material.color = Color.white;
+            // planeObject.GetComponent<Renderer>().material = material;
+        }
 
-    private void OnDrawGizmos()
-    {
-        // 각 평면을 기즈모로 그리기
-        DrawPlane(transform.up, transform.position - transform.up * knifeSize);
-        DrawPlane(-transform.up, transform.position + transform.up * knifeSize);
-        DrawPlane(transform.right, transform.position - transform.right * knifeSize);
-        DrawPlane(-transform.right, transform.position + transform.right * knifeSize);
-    }
+        private void OnDrawGizmos()
+        {
+            // 각 평면을 기즈모로 그리기
+            DrawPlane(transform.up, transform.position - transform.up * knifeSize);
+            DrawPlane(-transform.up, transform.position + transform.up * knifeSize);
+            DrawPlane(transform.right, transform.position - transform.right * knifeSize);
+            DrawPlane(-transform.right, transform.position + transform.right * knifeSize);
+        }
 
-    // 평면을 기즈모로 그리는 함수
-    private void DrawPlane(Vector3 normal, Vector3 point)
-    {
-        // 평면의 법선 벡터와 한 점을 사용하여 평면을 정의
-        Plane plane = new Plane(normal, point);
+        // 평면을 기즈모로 그리는 함수
+        private void DrawPlane(Vector3 normal, Vector3 point)
+        {
+            // 평면의 법선 벡터와 한 점을 사용하여 평면을 정의
+            Plane plane = new Plane(normal, point);
 
-        // 평면 위의 점들을 정의
-        Vector3 p1 = point + Vector3.Cross(normal, Vector3.up).normalized * knifeSize;
-        Vector3 p2 = point - Vector3.Cross(normal, Vector3.up).normalized * knifeSize;
-        Vector3 p3 = point + Vector3.Cross(normal, Vector3.right).normalized * knifeSize;
-        Vector3 p4 = point - Vector3.Cross(normal, Vector3.right).normalized * knifeSize;
+            // 평면 위의 점들을 정의
+            Vector3 p1 = point + Vector3.Cross(normal, Vector3.up).normalized * knifeSize;
+            Vector3 p2 = point - Vector3.Cross(normal, Vector3.up).normalized * knifeSize;
+            Vector3 p3 = point + Vector3.Cross(normal, Vector3.right).normalized * knifeSize;
+            Vector3 p4 = point - Vector3.Cross(normal, Vector3.right).normalized * knifeSize;
 
-        // 기즈모로 평면 그리기
-        Gizmos.color = Color.green; // 평면의 색상 설정
-        Gizmos.DrawLine(p1, p2);
-        Gizmos.DrawLine(p3, p4);
-        Gizmos.DrawLine(p1, p3);
-        Gizmos.DrawLine(p2, p4);
-    }
+            // 기즈모로 평면 그리기
+            Gizmos.color = Color.green; // 평면의 색상 설정
+            Gizmos.DrawLine(p1, p2);
+            Gizmos.DrawLine(p3, p4);
+            Gizmos.DrawLine(p1, p3);
+            Gizmos.DrawLine(p2, p4);
+        }
+
+        protected override void OnTest1(InputAction.CallbackContext context)
+        {
+
+
+        }
+
+        protected override void OnTest2(InputAction.CallbackContext context)
+        {
+            Player player = GameManager.Instance.Player;
+            //player.TakePicture();
+        }*/
 
     protected override void OnTest1(InputAction.CallbackContext context)
     {
-        
-
-    }
-
-    protected override void OnTest2(InputAction.CallbackContext context)
-    {
         Player player = GameManager.Instance.Player;
-        player.TakePicture();
+        player.PlayerSliceBox.CheackSlice();
     }
 }

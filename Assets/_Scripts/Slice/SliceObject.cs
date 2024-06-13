@@ -20,8 +20,10 @@ public class SliceObject : MonoBehaviour
 
     public void SliceMesh(Plane plane)
     {
-
-        Mesh[] meshes = Slicer.Slicer(Filter,plane);
+        Vector3 planeNormal = transform.TransformDirection(plane.normal);
+        float planeDistance = plane.distance + Vector3.Dot(plane.normal, transform.position);
+        Plane worldPlane = new Plane(planeNormal, planeDistance);
+        Mesh[] meshes = Slicer.Slicer(Filter, worldPlane);
         if (meshes != null)
         {
             for (int index = 0; index < meshes.Length; index++)

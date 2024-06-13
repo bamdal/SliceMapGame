@@ -244,23 +244,20 @@ public class Slice : MonoBehaviour
     /// <param name="normal">자르는 평면의 노말값</param>
     /// <param name="result">잘린 지점, 교차점 위치</param>
     /// <returns>성공적으로 지점을 구했으면 true 아니면 false</returns>
-    public static bool PointIntersectAPlane(Vector3 from , Vector3 to, Plane plane, out Vector3 result)
+    public static bool PointIntersectAPlane(Vector3 from, Vector3 to, Plane plane, out Vector3 result)
     {
-        Vector3 translation = to - from; // from  -> to 방향벡터
-        float dot = Vector3.Dot(plane.normal, translation);   // 노말벡터와의 내적 계산
+        Vector3 translation = to - from;
+        float dot = Vector3.Dot(plane.normal.normalized, translation);
 
-        // 두 벡터가 수직이 아닐때
         if (Mathf.Abs(dot) > Mathf.Epsilon)
         {
-            
-            Vector3 pointOnPlane =  plane.ClosestPointOnPlane(from);
-            Vector3 fromOrigin = from - pointOnPlane;    // 잘린지점에서 from 방향벡터
-            float fac = -Vector3.Dot(plane.normal, fromOrigin) / dot; // 비율 구하기
-            translation *= fac;                             // 방향벡터를 구한후 비율을 곱해서 나온 result가 잘린 지점이다
+            Vector3 pointOnPlane = plane.ClosestPointOnPlane(from);
+            Vector3 fromOrigin = from - pointOnPlane;
+            float fac = -Vector3.Dot(plane.normal, fromOrigin) / dot;
+            translation *= fac;
             result = from + translation;
             return true;
         }
-
 
         result = Vector3.zero;
         return false;
