@@ -77,12 +77,13 @@ public class Player : MonoBehaviour
         Vector3 extents = bounds.extents;
 
         Plane[] planes = new Plane[6];
-        planes[0] = new Plane(transform.TransformDirection(transform.right), transform.TransformPoint(center + transform.right * extents.x)); // 오른쪽 면
-        planes[1] = new Plane(transform.TransformDirection(-transform.right), transform.TransformPoint(center + -transform.right * extents.x)); // 왼쪽 면
-        planes[2] = new Plane(transform.TransformDirection(transform.up), transform.TransformPoint(center + transform.up * extents.y)); // 위쪽 면
-        planes[3] = new Plane(transform.TransformDirection(-transform.up), transform.TransformPoint(center + -transform.up * extents.y)); // 아래쪽 면
-        planes[4] = new Plane(transform.TransformDirection(transform.forward), transform.TransformPoint(center + transform.forward * extents.z)); // 앞쪽 면
-        planes[5] = new Plane(transform.TransformDirection(-transform.forward), transform.TransformPoint(center + -transform.forward * extents.z)); // 뒤쪽 면
+        planes[0] = new Plane(transform.right, transform.TransformPoint(playerSliceBox.transform.position + playerSliceBox.transform.right * extents.x)); // 오른쪽 면
+        planes[1] = new Plane(-transform.right, transform.TransformPoint(playerSliceBox.transform.position + -transform.right * extents.x)); // 왼쪽 면
+        planes[2] = new Plane(transform.up, transform.TransformPoint(playerSliceBox.transform.position + transform.up * extents.y)); // 위쪽 면
+        planes[3] = new Plane(-transform.up, transform.TransformPoint(playerSliceBox.transform.position + -transform.up * extents.y)); // 아래쪽 면
+        planes[4] = new Plane(transform.forward, transform.TransformPoint(playerSliceBox.transform.position + transform.forward * extents.z)); // 앞쪽 면
+        planes[5] = new Plane(-transform.forward, transform.TransformPoint(playerSliceBox.transform.position + -transform.forward * extents.z)); // 뒤쪽 면
+
 
         return planes;
     }
@@ -191,9 +192,60 @@ public class Player : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    private void OnDrawGizmos()
+    void OnDrawGizmos()
     {
+        playerSliceBox = GetComponentInChildren<PlayerSliceBox>(true);
+        /*        BoxCollider BoxBounds = playerSliceBox.GetComponent<BoxCollider>();
 
+
+                Bounds bounds = BoxBounds.bounds;*/
+        Bounds bounds = playerSliceBox.BoxBounds;
+        Plane[] planes = GetBoxPlanes(bounds);
+
+        // 각 평면을 그리기 위한 Gizmos 색상 설정
+        Gizmos.color = Color.red;
+        DrawPlaneGizmos(planes[0]);
+
+        Gizmos.color = Color.green;
+        DrawPlaneGizmos(planes[1]);
+
+        Gizmos.color = Color.blue;
+        DrawPlaneGizmos(planes[2]);
+
+        Gizmos.color = Color.yellow;
+        DrawPlaneGizmos(planes[3]);
+
+        Gizmos.color = Color.cyan;
+        DrawPlaneGizmos(planes[4]);
+
+        Gizmos.color = Color.magenta;
+        DrawPlaneGizmos(planes[5]);
+    }
+    void DrawPlaneGizmos(Plane plane)
+    {
+        // 평면의 중심과 방향 벡터를 계산
+        Vector3 planeCenter = -plane.normal * plane.distance ;
+        Vector3 planeNormal = plane.normal;
+        // 평면의 네 꼭짓점을 계산하기 위한 임의의 두 벡터
+        Vector3 v3 = Vector3.Cross(planeNormal, transform.up);
+        if (v3 == Vector3.zero)
+        {
+            v3 = Vector3.Cross(planeNormal, transform.right);
+        }
+
+        v3.Normalize();
+        v3 *= 5; // 크기 조절
+
+        Vector3 corner0 = planeCenter + v3;
+        Vector3 corner1 = planeCenter - v3;
+        Vector3 corner2 = planeCenter + Quaternion.AngleAxis(90.0f, planeNormal) * v3;
+        Vector3 corner3 = planeCenter - Quaternion.AngleAxis(90.0f, planeNormal) * v3;
+
+        // 평면의 네 꼭짓점을 연결하여 사각형 그리기
+        Gizmos.DrawLine(corner0, corner2);
+        Gizmos.DrawLine(corner2, corner1);
+        Gizmos.DrawLine(corner1, corner3);
+        Gizmos.DrawLine(corner3, corner0);
     }
 #endif
 }

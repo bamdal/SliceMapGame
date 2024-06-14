@@ -21,16 +21,22 @@ public class PlayerSliceBox : MonoBehaviour
     bool delay = true;
 
     public Action<Collider> onColliderInTrigger;
+
+    Bounds bounds;
+
+    public Bounds BoxBounds => bounds;
     private void Awake()
     {
         slicerBox = GetComponent<BoxCollider>();
+        bounds = slicerBox.bounds;
+        slicerBox.enabled = false;
     }
 
     private void Start()
     {
         player = GameManager.Instance.Player;
         slicerBox.size = player.boxSize;
-        slicerBox.center = player.boxCenter;
+        transform.position= player.boxCenter;
         slicerBox.enabled = false;
     }
 
