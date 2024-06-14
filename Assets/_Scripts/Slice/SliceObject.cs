@@ -32,6 +32,7 @@ public class SliceObject : MonoBehaviour
 
                 GameObject submesh = Instantiate(this.gameObject);
                 //submesh.gameObject.transform.position += (2 * transform.right); // 소환 위치
+                submesh.name = $"{submesh.name}_Slice_{index}";
                 MeshFilter filter = submesh.GetComponent<MeshFilter>();   // 메시 적용
                 filter.sharedMesh = mesh;
 
