@@ -25,6 +25,8 @@ public class PlayerSliceBox : MonoBehaviour
     Bounds bounds;
 
     public Bounds BoxBounds => bounds;
+
+    public Transform[] boxTransforms = new Transform[6];
     private void Awake()
     {
         slicerBox = GetComponent<BoxCollider>();

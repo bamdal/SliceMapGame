@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
     public void TakePicture(Collider collider)
     {
         // 박스의 범위 정의
-        Bounds boxBounds = playerSliceBox.SlicerBox.bounds;
+        Bounds boxBounds = playerSliceBox.BoxBounds;
         // 박스의 6면을 Plane으로 정의
         Plane[] boxPlanes = GetBoxPlanes(boxBounds);
 
@@ -77,13 +77,19 @@ public class Player : MonoBehaviour
         Vector3 extents = bounds.extents;
 
         Plane[] planes = new Plane[6];
-        planes[0] = new Plane(transform.right, transform.TransformPoint(playerSliceBox.transform.position + playerSliceBox.transform.right * extents.x)); // 오른쪽 면
-        planes[1] = new Plane(-transform.right, transform.TransformPoint(playerSliceBox.transform.position + -transform.right * extents.x)); // 왼쪽 면
-        planes[2] = new Plane(transform.up, transform.TransformPoint(playerSliceBox.transform.position + transform.up * extents.y)); // 위쪽 면
-        planes[3] = new Plane(-transform.up, transform.TransformPoint(playerSliceBox.transform.position + -transform.up * extents.y)); // 아래쪽 면
-        planes[4] = new Plane(transform.forward, transform.TransformPoint(playerSliceBox.transform.position + transform.forward * extents.z)); // 앞쪽 면
-        planes[5] = new Plane(-transform.forward, transform.TransformPoint(playerSliceBox.transform.position + -transform.forward * extents.z)); // 뒤쪽 면
+        planes[0] = new Plane(playerSliceBox.boxTransforms[0].right, playerSliceBox.boxTransforms[0].position); // 오른쪽 면
+        planes[1] = new Plane(-playerSliceBox.boxTransforms[1].right, playerSliceBox.boxTransforms[1].position); // 왼쪽 면
+        planes[2] = new Plane(playerSliceBox.boxTransforms[2].up, playerSliceBox.boxTransforms[2].position); // 위쪽 면
+        planes[3] = new Plane(-playerSliceBox.boxTransforms[3].up, playerSliceBox.boxTransforms[3].position); // 아래쪽 면
+        planes[4] = new Plane(playerSliceBox.boxTransforms[4].forward, playerSliceBox.boxTransforms[4].position); // 앞쪽 면
+        planes[5] = new Plane(-playerSliceBox.boxTransforms[5].forward, playerSliceBox.boxTransforms[5].position); // 뒤쪽 면
+  /*      Debug.Log(transform.forward);
+        Debug.Log(transform.TransformDirection(transform.forward));
+        Debug.Log(playerSliceBox.transform.TransformPoint(transform.forward * extents.z));
+        Debug.Log(transform.TransformPoint(playerSliceBox.transform.position + transform.forward * extents.z));
 
+*/
+ 
 
         return planes;
     }
