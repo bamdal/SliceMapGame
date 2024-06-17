@@ -67,7 +67,8 @@ public class PlayerSliceBox : MonoBehaviour
         Collider[] colliders = Physics.OverlapBox(transformedLocalPosition, boxSize/2, transform.parent.rotation);
         foreach (Collider collider in colliders)
         {
-            onColliderInTrigger?.Invoke(collider);
+            if(collider.GetComponent<SliceObject>() != null)
+                onColliderInTrigger?.Invoke(collider);
 
         }
     }

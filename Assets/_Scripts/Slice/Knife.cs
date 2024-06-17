@@ -27,7 +27,7 @@ public class Knife : MonoBehaviour
     }
     private void Start()
     {
-        slice = GameManager.Instance.Slicer;
+   
     }
     void CreatePlaneObject(Plane plane, Vector3 position, Vector3 normal)
     {

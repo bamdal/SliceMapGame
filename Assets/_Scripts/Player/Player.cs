@@ -3,12 +3,15 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public Vector3 boxCenter = new Vector3(10, 10, 10);
+    public Vector3 boxCenter = new Vector3(0, 1.5f, 50);
     public Vector3 boxSize = new Vector3(10, 10, 100);
 
     PlayerSliceBox playerSliceBox;
 
     public PlayerSliceBox PlayerSliceBox => playerSliceBox;
+
+
+
 
     private void Awake()
     {
@@ -162,9 +165,21 @@ public class Player : MonoBehaviour
 
             return vertices;
         }
+        else if (collider is MeshCollider meshCollider)
+        {
+            Mesh mesh = meshCollider.sharedMesh;
+            Vector3[] meshVertices = mesh.vertices;
+            Vector3[] worldVertices = new Vector3[meshVertices.Length];
 
-        // 다른 종류의 콜라이더는 여기에서 다룰 수 있습니다
-        return new Vector3[0];
+            for (int i = 0; i < meshVertices.Length; i++)
+            {
+                worldVertices[i] = collider.transform.TransformPoint(meshVertices[i]);
+            }
+
+            return worldVertices;
+        }
+        Debug.Log("다른 콜라이이더 이므로 예외처리 필요");
+            return new Vector3[0];
     }
 
     Vector3[] GetColliderCorners(Collider collider)

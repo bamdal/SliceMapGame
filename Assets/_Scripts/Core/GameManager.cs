@@ -21,23 +21,21 @@ public class GameManager : Singleton<GameManager>
 
 
 
-    Slice slicer;
+    InObject inObject;
 
-    public Slice Slicer
-    {
-        get
-        {
-            if (slicer == null)
-            {
-                slicer = GetComponent<Slice>();
-            }
-            return slicer;
-        }
-    }
+    public InObject InObject => inObject;
+
+    OutObject outObject;
+
+    public OutObject OutObject => outObject;
+
+
     protected override void OnInitialize()
     {
-        slicer = GetComponent<Slice>();
         player = FindAnyObjectByType<Player>();
+
+        inObject = GetComponentInChildren<InObject>();
+        outObject = GetComponentInChildren<OutObject>();
 
     }
 
