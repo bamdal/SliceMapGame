@@ -29,19 +29,17 @@ public class SliceObject : Slice
 
         // 회전 적용 값
         Quaternion rotationToTarget = Quaternion.FromToRotation(transform.forward, Vector3.forward);
-        rotationToTarget *= Quaternion.FromToRotation(transform.right, Vector3.right);
-        rotationToTarget *= Quaternion.FromToRotation(transform.up, Vector3.up);
 
         // 월드기준으로 변환후 회전한 만큼 변화
         Vector3 planeNormal = rotationToTarget * transform.TransformDirection(plane.normal);
 
         float planeDistance = plane.distance + Vector3.Dot(plane.normal, transform.position);
-                Plane worldPlane = new Plane(planeNormal, planeDistance);
+        Plane worldPlane = new Plane(planeNormal, planeDistance);
 
-/*        Vector3 planeNormal = transform.TransformDirection(plane.normal);
-        float planeDistance = Vector3.Dot(transform.TransformPoint(plane.normal * plane.distance), planeNormal);
-        Plane worldPlane = new Plane(planeNormal, planeDistance);*/
-    
+        /*        Vector3 planeNormal = transform.TransformDirection(plane.normal);
+                float planeDistance = Vector3.Dot(transform.TransformPoint(plane.normal * plane.distance), planeNormal);
+                Plane worldPlane = new Plane(planeNormal, planeDistance);*/
+
         // 평면을 월드 좌표계로 변환하고 스케일 조정
         /*        Vector3 planeNormal = Vector3.Scale(transform.TransformDirection(plane.normal), transform.lossyScale).normalized;
                 float planeDistance = Vector3.Dot(transform.TransformPoint(plane.normal * plane.distance), planeNormal);
@@ -57,12 +55,12 @@ public class SliceObject : Slice
                 GameObject submesh;
                 if (index == 0)
                 {
-                    submesh = Instantiate(this.gameObject,outObject.transform);
+                    submesh = Instantiate(this.gameObject, outObject.transform);
 
                 }
                 else
                 {
-                    submesh = Instantiate(this.gameObject,inObject.transform);
+                    submesh = Instantiate(this.gameObject, inObject.transform);
                     submesh.gameObject.SetActive(false);
                 }
                 //submesh.gameObject.transform.position += (2 * transform.right); // 소환 위치
