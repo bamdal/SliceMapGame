@@ -340,10 +340,16 @@ public class Slice : MonoBehaviour
     /// <param name="vertexDataList">잘린 부분의 정점으로 이뤄진 리스트</param>
     private static void JoinPointsAlongPlane(ref SlicedObjectData positive, ref SlicedObjectData negative, Vector3 cutNormal, List<VertexData> vertexDataList)
     {
+        Vector3 center = Vector3.zero;
+        foreach (var vertexData in vertexDataList)
+        {
+            center += vertexData.Position;
+        }
+        center /= vertexDataList.Count;
         // 리스트의 첫번째 지점과 나머지 지점들을 연결한다
         VertexData halfway = new VertexData()
         {
-            Position = vertexDataList[0].Position
+            Position = center
         };
 
         /*
@@ -354,7 +360,7 @@ public class Slice : MonoBehaviour
          */
 
         // 잘린 지점을 따라 삼각형을 생성
-        for (int i = 1; i < vertexDataList.Count; i++)
+        for (int i = 0; i < vertexDataList.Count; i++)
         {
             VertexData firstVertex = vertexDataList[i];
             VertexData secondVertex = vertexDataList[(i + 1) % vertexDataList.Count];

@@ -67,6 +67,8 @@ public class Player : MonoBehaviour
                 }
             }
         }
+
+        collider.gameObject.SetActive(false);
     }
 
     /// <summary>
