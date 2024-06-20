@@ -20,28 +20,40 @@ namespace StarterAssets
 		public bool cursorLocked = true;
 		public bool cursorInputForLook = true;
 
+		GameManager gameManager;
+
+        private void Start()
+        {
+            gameManager = GameManager.Instance;
+        }
+
 #if ENABLE_INPUT_SYSTEM
-		public void OnMove(InputValue value)
+        public void OnMove(InputAction.CallbackContext context)
 		{
-			MoveInput(value.Get<Vector2>());
+			MoveInput(context.ReadValue<Vector2>());
 		}
 
-		public void OnLook(InputValue value)
+		public void OnLook(InputAction.CallbackContext context)
 		{
 			if(cursorInputForLook)
 			{
-				LookInput(value.Get<Vector2>());
+				LookInput(context.ReadValue<Vector2>());
 			}
 		}
 
-		public void OnJump(InputValue value)
+		public void OnJump(InputAction.CallbackContext context)
 		{
-			JumpInput(value.isPressed);
+			JumpInput(context.performed);
 		}
 
-		public void OnSprint(InputValue value)
+		public void OnSprint(InputAction.CallbackContext context)
 		{
-			SprintInput(value.isPressed);
+			SprintInput(context.performed);
+		}
+
+		public void OnLClick(InputAction.CallbackContext context)
+		{
+			LClickInput(context.performed);
 		}
 #endif
 
@@ -66,6 +78,14 @@ namespace StarterAssets
 			sprint = newSprintState;
 		}
 		
+		public void LClickInput(bool newLClickState)
+		{
+			if (newLClickState)
+			{
+				gameManager.TakaPicture();
+			}
+		}
+
 		private void OnApplicationFocus(bool hasFocus)
 		{
 			SetCursorState(cursorLocked);

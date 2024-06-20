@@ -63,9 +63,10 @@ public class SliceObject : Slice
                 //submesh.gameObject.transform.position += (2 * transform.right); // 소환 위치
                 submesh.name = $"{submesh.name}_Slice_{index}";
               
-
+    
                 MeshFilter filter = submesh.GetComponent<MeshFilter>();   // 메시 적용
                 filter.sharedMesh = mesh;
+
 
                 BoxCollider boxCollider = submesh.GetComponent<BoxCollider>();
                 if(boxCollider != null)
@@ -86,4 +87,6 @@ public class SliceObject : Slice
 
         }
     }
+
+
 }
