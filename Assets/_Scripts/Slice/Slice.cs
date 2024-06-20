@@ -142,6 +142,15 @@ public class Slice : MonoBehaviour
     public Mesh[] Slicer(MeshFilter meshFilter, Plane plane)
     {
         Mesh originMesh = meshFilter.sharedMesh;  // 매쉬 가져오고
+
+        // 평면을 로컬 좌표계로 변환
+        Matrix4x4 worldToLocal = meshFilter.transform.worldToLocalMatrix;
+        plane = new Plane(
+            worldToLocal.MultiplyVector(plane.normal),
+            worldToLocal.MultiplyPoint3x4(plane.ClosestPointOnPlane(meshFilter.transform.position))
+        );
+
+
         SlicedObjectData positiveMesh = new SlicedObjectData(); // 잘린 오브젝트중 첫번째
         SlicedObjectData negativeMesh = new SlicedObjectData(); // 잘린 오브젝트중 두번째
 

@@ -27,14 +27,12 @@ public class SliceObject : Slice
     public void SliceMesh(Plane plane)
     {
 
-        // 회전 적용 값
-        Quaternion rotationToTarget = Quaternion.FromToRotation(transform.forward, Vector3.forward);
+/*        Quaternion rotation = Quaternion.Euler(-transform.eulerAngles);
 
-        // 월드기준으로 변환후 회전한 만큼 변화
-        Vector3 planeNormal = rotationToTarget * transform.TransformDirection(plane.normal);
+        Vector3 planeNormal = rotation * transform.TransformDirection(plane.normal);
 
         float planeDistance = plane.distance + Vector3.Dot(plane.normal, transform.position);
-        Plane worldPlane = new Plane(planeNormal, planeDistance);
+        Plane worldPlane = new Plane(planeNormal, planeDistance);*/
 
         /*        Vector3 planeNormal = transform.TransformDirection(plane.normal);
                 float planeDistance = Vector3.Dot(transform.TransformPoint(plane.normal * plane.distance), planeNormal);
@@ -45,7 +43,7 @@ public class SliceObject : Slice
                 float planeDistance = Vector3.Dot(transform.TransformPoint(plane.normal * plane.distance), planeNormal);
                 Plane worldPlane = new Plane(planeNormal, planeDistance);*/
 
-        Mesh[] meshes = Slicer(Filter, worldPlane);
+        Mesh[] meshes = Slicer(Filter, plane);
         // 잘린 매쉬 중에 1 번은 범위 안에 있는 오브젝트
         if (meshes != null)
         {
@@ -56,7 +54,6 @@ public class SliceObject : Slice
                 if (index == 0)
                 {
                     submesh = Instantiate(this.gameObject, outObject.transform);
-
                 }
                 else
                 {
