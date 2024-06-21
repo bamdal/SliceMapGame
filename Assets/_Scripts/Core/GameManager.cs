@@ -93,6 +93,12 @@ public class GameManager : Singleton<GameManager>
     {
         // 사진 찍기 가능 여부 체크후 횟수감소와 찍기구현
         Debug.Log("사진찍기");
+        if(cutCount > 0)
+        {
+            player.PlayerSliceBox.CheackSlice();
+
+        }
+        CutCount--;
     }
 
     // 자르는 횟수 제한 

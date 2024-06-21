@@ -16,23 +16,16 @@ public class SliceObject : Slice
         Filter = GetComponent<MeshFilter>();
     }
 
-    private void Start()
-    {
-        GameManager gameManager = GameManager.Instance;
 
-        inObject = gameManager.InObject;
-        outObject = gameManager.OutObject;
-    }
-
-    public void SliceMesh(Plane plane)
+    public void SliceMesh(List<Plane> intersectingPlanes)
     {
 
-/*        Quaternion rotation = Quaternion.Euler(-transform.eulerAngles);
+        /*        Quaternion rotation = Quaternion.Euler(-transform.eulerAngles);
 
-        Vector3 planeNormal = rotation * transform.TransformDirection(plane.normal);
+                Vector3 planeNormal = rotation * transform.TransformDirection(plane.normal);
 
-        float planeDistance = plane.distance + Vector3.Dot(plane.normal, transform.position);
-        Plane worldPlane = new Plane(planeNormal, planeDistance);*/
+                float planeDistance = plane.distance + Vector3.Dot(plane.normal, transform.position);
+                Plane worldPlane = new Plane(planeNormal, planeDistance);*/
 
         /*        Vector3 planeNormal = transform.TransformDirection(plane.normal);
                 float planeDistance = Vector3.Dot(transform.TransformPoint(plane.normal * plane.distance), planeNormal);
@@ -42,6 +35,14 @@ public class SliceObject : Slice
         /*        Vector3 planeNormal = Vector3.Scale(transform.TransformDirection(plane.normal), transform.lossyScale).normalized;
                 float planeDistance = Vector3.Dot(transform.TransformPoint(plane.normal * plane.distance), planeNormal);
                 Plane worldPlane = new Plane(planeNormal, planeDistance);*/
+
+        GameManager gameManager = GameManager.Instance;
+
+        inObject = gameManager.InObject;
+        outObject = gameManager.OutObject;
+
+        Plane plane = intersectingPlanes[0];
+        intersectingPlanes.RemoveAt(0);
 
         Mesh[] meshes = Slicer(Filter, plane);
         // 잘린 매쉬 중에 1 번은 범위 안에 있는 오브젝트
@@ -54,32 +55,35 @@ public class SliceObject : Slice
                 if (index == 0)
                 {
                     submesh = Instantiate(this.gameObject, outObject.transform);
+                    RefreshMesh(index, mesh, submesh);
+
                 }
                 else
                 {
                     submesh = Instantiate(this.gameObject, inObject.transform);
-                    submesh.gameObject.SetActive(false);
+                    RefreshMesh(index, mesh, submesh);
+
+
+                    if (intersectingPlanes.Count > 0)
+                    {
+                        SliceObject sliceObject = submesh.GetComponent<SliceObject>();
+                        sliceObject.SliceMesh(intersectingPlanes);
+                        Destroy(sliceObject.gameObject);
+                    }
+                    else
+                    {
+
+                        // 맨 마지막 에 깔끔하게 잘려진 오브젝트들
+                        submesh.gameObject.SetActive(false);
+
+                    }
+
+
                 }
                 //submesh.gameObject.transform.position += (2 * transform.right); // 소환 위치
-                submesh.name = $"{submesh.name}_Slice_{index}";
               
     
-                MeshFilter filter = submesh.GetComponent<MeshFilter>();   // 메시 적용
-                filter.sharedMesh = mesh;
 
-
-                BoxCollider boxCollider = submesh.GetComponent<BoxCollider>();
-                if(boxCollider != null)
-                {
-                    boxCollider.center = mesh.bounds.center - boxCollider.transform.position;
-                    boxCollider.size = mesh.bounds.size;
-                }
-
-                MeshCollider meshCollider = submesh.GetComponent<MeshCollider>();
-                if (meshCollider != null)
-                {
-                    meshCollider.sharedMesh = mesh;
-                }
             }
 
             //gameObject.SetActive(false);
@@ -88,5 +92,31 @@ public class SliceObject : Slice
         }
     }
 
+    /// <summary>
+    /// 메시 이름, 메시 정보 콜라이더 재정리
+    /// </summary>
+    /// <param name="index"></param>
+    /// <param name="mesh"></param>
+    /// <param name="submesh"></param>
+    private static void RefreshMesh(int index, Mesh mesh, GameObject submesh)
+    {
+        submesh.name = $"{submesh.name}_Slice_{index}";
 
+        MeshFilter filter = submesh.GetComponent<MeshFilter>();   // 메시 적용
+        filter.sharedMesh = mesh;
+
+
+        BoxCollider boxCollider = submesh.GetComponent<BoxCollider>();
+        if (boxCollider != null)
+        {
+            boxCollider.center = mesh.bounds.center - boxCollider.transform.position;
+            boxCollider.size = mesh.bounds.size;
+        }
+
+        MeshCollider meshCollider = submesh.GetComponent<MeshCollider>();
+        if (meshCollider != null)
+        {
+            meshCollider.sharedMesh = mesh;
+        }
+    }
 }

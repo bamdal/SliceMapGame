@@ -59,11 +59,17 @@ public class Player : MonoBehaviour
 
                 if (IsColliderIntersectingPlanes(collider, boxPlanes, boxBounds, out intersectingPlanes))
                 {
+                    /*                    foreach (Plane plane in intersectingPlanes)
+                                        {
+                                            Debug.Log($"{sliceObject.name}이 겹친 평면 노말 : {plane.normal} 거리 : {plane.distance}");
+                                            sliceObject.SliceMesh(plane);
+                                        }*/
                     foreach (Plane plane in intersectingPlanes)
                     {
                         Debug.Log($"{sliceObject.name}이 겹친 평면 노말 : {plane.normal} 거리 : {plane.distance}");
-                        sliceObject.SliceMesh(plane);
                     }
+                        sliceObject.SliceMesh(intersectingPlanes);
+
                 }
             }
         }
