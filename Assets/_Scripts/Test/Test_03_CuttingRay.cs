@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class Test_03_CuttingRay : TestBase
 {
+#if UNITY_EDITOR
+
     /*    /// <summary>
         /// 칼날의 크기(원점에서 떨어진 거리)
         /// </summary>
@@ -94,4 +96,5 @@ public class Test_03_CuttingRay : TestBase
         Player player = GameManager.Instance.Player;
         player.PlayerSliceBox.CheackSlice();
     }
+    #endif
 }

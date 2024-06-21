@@ -3,6 +3,16 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+public enum GameState
+{
+    None,
+    GameReady,
+    GameStarted,
+    GameFinished,
+    GamePaused
+
+}
+
 public class GameManager : Singleton<GameManager>
 {
     Player player;
@@ -16,6 +26,23 @@ public class GameManager : Singleton<GameManager>
                 player = FindAnyObjectByType<Player>();
             }
             return player;
+        }
+    }
+
+    GameState gameState = GameState.None;
+
+    GameState GameState
+    {
+        get => gameState;
+        set
+        {
+
+            if(gameState != value)
+            {
+                GameStateExit(gameState);
+                gameState = value;
+                GameStateEnter(gameState);
+            }
         }
     }
 
@@ -59,7 +86,12 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// 자르기 가능 유무 체크
     /// </summary>
-    bool Cutable;
+    bool cutable;
+
+    /// <summary>
+    /// 사진찍기 쿨타임
+    /// </summary>
+    public float takePictureCoolTime = 3.0f;
 
     protected override void OnInitialize()
     {
@@ -70,6 +102,50 @@ public class GameManager : Singleton<GameManager>
 
         SetCutCount(1);
 
+    }
+
+    /// <summary>
+    /// 게임 재시작시 초기화
+    /// </summary>
+    void GameRefresh()
+    {
+
+    }
+
+
+    void GameStateExit(GameState gameState)
+    {
+        switch (gameState)
+        {
+            case GameState.None:
+                break;
+            case GameState.GameReady:
+                break;
+            case GameState.GameStarted:
+                break;
+            case GameState.GameFinished:
+                break;
+            case GameState.GamePaused:
+                break;
+        }
+    }
+
+    void GameStateEnter(GameState gameState)
+    {
+        switch (gameState)
+        {
+            case GameState.None:
+                break;
+            case GameState.GameReady:
+                break;
+            case GameState.GameStarted:
+               
+                break;
+            case GameState.GameFinished:
+                break;
+            case GameState.GamePaused:
+                break;
+        }
     }
 
     /// <summary>
@@ -89,17 +165,54 @@ public class GameManager : Singleton<GameManager>
         CutCount++;
     }
 
+    /// <summary>
+    /// 사진 찍기 함수
+    /// </summary>
     public void TakaPicture()
     {
         // 사진 찍기 가능 여부 체크후 횟수감소와 찍기구현
-        Debug.Log("사진찍기");
-        if(cutCount > 0)
+        if (cutable)
         {
-            player.PlayerSliceBox.CheackSlice();
+            StartCoroutine(CoolTime(takePictureCoolTime));
+            Debug.Log("사진찍기");
+            if (CutCount > 0)
+            {
+                player.PlayerSliceBox.CheackSlice();
 
+            }
+            CutCount--;
         }
-        CutCount--;
+        else
+        {
+            Debug.Log($"현재 사진 찍기 불가능 상태 cutable : {cutable} CutCount : {CutCount}");
+        }
+
     }
+
+    /// <summary>
+    /// 플레이어가 카메라활성화 유무
+    /// </summary>
+    public void PlayerUseCamara(bool able)
+    {
+        StopAllCoroutines();
+        cutable = able;
+    }
+
+    /// <summary>
+    /// 폴라로이드 사진 덮어쓰기
+    /// </summary>
+    public void PolaroidOverwrite()
+    {
+
+    }
+
+    IEnumerator CoolTime(float coolTime)
+    {
+        cutable = false;
+        yield return new WaitForSeconds(coolTime);
+        cutable = true;
+    }
+
 
     // 자르는 횟수 제한 
     // 잘랐을 때 잘랐던 영역(B)만 따로 보관후 소환 할때 소환 위치 장애물(A) 자르고  영역(B) 다시 소환

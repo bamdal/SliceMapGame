@@ -55,10 +55,15 @@ namespace StarterAssets
 		{
 			LClickInput(context.performed);
 		}
+
+        public void OnRClick(InputAction.CallbackContext context)
+        {
+            RClickInput(context.performed);
+        }
 #endif
 
 
-		public void MoveInput(Vector2 newMoveDirection)
+        public void MoveInput(Vector2 newMoveDirection)
 		{
 			move = newMoveDirection;
 		} 
@@ -86,7 +91,15 @@ namespace StarterAssets
 			}
 		}
 
-		private void OnApplicationFocus(bool hasFocus)
+        public void RClickInput(bool newLClickState)
+        {
+            if (newLClickState)
+            {
+				gameManager.Player.Toggle_Anim_Camera();
+            }
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
 		{
 			SetCursorState(cursorLocked);
 		}

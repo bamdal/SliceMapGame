@@ -10,12 +10,18 @@ public class Player : MonoBehaviour
 
     public PlayerSliceBox PlayerSliceBox => playerSliceBox;
 
+    Animator animator;
 
+    readonly int anim_UpCameraHash = Animator.StringToHash("UpCamera");
+    readonly int anim_DownCameraHash = Animator.StringToHash("DownCamera");
+
+
+    bool usedCamera = false;
 
 
     private void Awake()
     {
-
+        animator = GetComponent<Animator>();
     }
 
     private void Start()
@@ -23,6 +29,36 @@ public class Player : MonoBehaviour
         playerSliceBox = GetComponentInChildren<PlayerSliceBox>(true);
         playerSliceBox.onColliderInTrigger += TakePicture;
     }
+
+
+    void Anim_UpCamera()
+    {
+        animator.ResetTrigger(anim_UpCameraHash);
+        animator.SetTrigger(anim_UpCameraHash);
+    }
+
+    void Anim_DownCamera()
+    {
+        animator.ResetTrigger(anim_DownCameraHash);
+        animator.SetTrigger(anim_DownCameraHash);
+    }
+
+
+    public void Toggle_Anim_Camera()
+    {
+        
+        if (usedCamera)
+        {
+            usedCamera = false;
+            Anim_DownCamera();
+        }
+        else
+        {
+            usedCamera = true;
+            Anim_UpCamera();
+        }
+    }
+    // mesh Slice 관련 =========================================================================================
 
     public void TakePicture(Collider collider)
     {

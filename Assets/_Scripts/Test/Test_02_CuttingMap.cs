@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class Test_02_CuttingMap : TestBase
 {
+#if UNITY_EDITOR
+
     public SliceObject sliceObject;
     public Vector3 point;
     public Vector3 normal = new(0,1,0);
@@ -12,4 +14,5 @@ public class Test_02_CuttingMap : TestBase
     {
         //sliceObject.SliceMesh(point, normal);
     }
+    #endif
 }
