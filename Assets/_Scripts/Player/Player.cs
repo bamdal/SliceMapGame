@@ -15,8 +15,11 @@ public class Player : MonoBehaviour
     readonly int anim_UpCameraHash = Animator.StringToHash("UpCamera");
     readonly int anim_DownCameraHash = Animator.StringToHash("DownCamera");
 
-
+    /// <summary>
+    /// 애니메이션 구분용 bool (true면 카메라 내리기, false면 카메라 올리기)
+    /// </summary>
     bool usedCamera = false;
+
 
 
     private void Awake()
@@ -33,13 +36,13 @@ public class Player : MonoBehaviour
 
     void Anim_UpCamera()
     {
-        animator.ResetTrigger(anim_UpCameraHash);
+        animator.ResetTrigger(anim_DownCameraHash);
         animator.SetTrigger(anim_UpCameraHash);
     }
 
     void Anim_DownCamera()
     {
-        animator.ResetTrigger(anim_DownCameraHash);
+        animator.ResetTrigger(anim_UpCameraHash);
         animator.SetTrigger(anim_DownCameraHash);
     }
 

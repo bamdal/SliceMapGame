@@ -86,7 +86,12 @@ public class GameManager : Singleton<GameManager>
     /// <summary>
     /// 자르기 가능 유무 체크
     /// </summary>
-    bool cutable;
+    bool cutCoolTime;
+
+    /// <summary>
+    /// 카메라 소유 유무
+    /// </summary>
+    bool getCamera;
 
     /// <summary>
     /// 사진찍기 쿨타임
@@ -100,8 +105,8 @@ public class GameManager : Singleton<GameManager>
         inObject = GetComponentInChildren<InObject>();
         outObject = GetComponentInChildren<OutObject>();
 
-        SetCutCount(1);
-
+     
+        GameRefresh();
     }
 
     /// <summary>
@@ -109,7 +114,9 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     void GameRefresh()
     {
-
+        SetCutCount(1);
+        getCamera = false;
+        cutCoolTime = true;
     }
 
 
@@ -171,21 +178,33 @@ public class GameManager : Singleton<GameManager>
     public void TakaPicture()
     {
         // 사진 찍기 가능 여부 체크후 횟수감소와 찍기구현
-        if (cutable)
+        if (cutCoolTime)
         {
-            StartCoroutine(CoolTime(takePictureCoolTime));
-            Debug.Log("사진찍기");
-            if (CutCount > 0)
+            if (getCamera)
             {
-                player.PlayerSliceBox.CheackSlice();
 
+                if (CutCount > 0)
+                {
+                    StartCoroutine(CoolTime(takePictureCoolTime));
+                    Debug.Log("사진찍기");
+                    player.PlayerSliceBox.CheackSlice();
+                    CutCount--;
+
+                }
+                else
+                {
+                    Debug.Log($"현재 사진 찍기 불가능 상태 CutCount : {CutCount}");
+                }
             }
-            CutCount--;
-        }
-        else
+            else
+            {
+                Debug.Log($"현재 사진 찍기 불가능 상태 getCamera : {getCamera}");
+            }
+        }else
         {
-            Debug.Log($"현재 사진 찍기 불가능 상태 cutable : {cutable} CutCount : {CutCount}");
+            Debug.Log($"현재 사진 찍기 불가능 상태 쿨타임중");
         }
+
 
     }
 
@@ -195,7 +214,7 @@ public class GameManager : Singleton<GameManager>
     public void PlayerUseCamara(bool able)
     {
         StopAllCoroutines();
-        cutable = able;
+        getCamera = able;
     }
 
     /// <summary>
@@ -208,9 +227,9 @@ public class GameManager : Singleton<GameManager>
 
     IEnumerator CoolTime(float coolTime)
     {
-        cutable = false;
+        cutCoolTime = false;
         yield return new WaitForSeconds(coolTime);
-        cutable = true;
+        cutCoolTime = true;
     }
 
 
