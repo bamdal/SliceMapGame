@@ -87,7 +87,7 @@ namespace StarterAssets
 		{
 			if (newLClickState)
 			{
-				gameManager.TakaPicture();
+				gameManager.Player.PlayerTakePicture();
 			}
 		}
 

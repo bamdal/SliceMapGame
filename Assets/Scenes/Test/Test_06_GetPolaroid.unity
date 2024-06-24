@@ -2927,7 +2927,7 @@ GameObject:
   - component: {fileID: 955030784}
   - component: {fileID: 955030785}
   m_Layer: 0
-  m_Name: Test_05_TakeCamera
+  m_Name: Test_06_GetPolaroid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2957,11 +2957,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 955030783}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 86bf3d3a39c993241b087305eca0e09b, type: 3}
+  m_Script: {fileID: 11500000, guid: 4a15ce9742f6de54d85380a8baa94e6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   seed: -1
-  cutCount: 5
 --- !u!1001 &968363653
 PrefabInstance:
   m_ObjectHideFlags: 0

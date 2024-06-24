@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -65,9 +66,12 @@ public class GameManager : Singleton<GameManager>
         set
         {
             cutCount = Mathf.Clamp(value,0,maxCutCount);
+            onCutCount?.Invoke(cutCount);
         }
     }
 
+
+    public Action<int> onCutCount;
 
     InObject inObject;
 
@@ -83,6 +87,8 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public OutObject OutObject => outObject;
 
+    
+
     /// <summary>
     /// 자르기 가능 유무 체크
     /// </summary>
@@ -92,6 +98,8 @@ public class GameManager : Singleton<GameManager>
     /// 카메라 소유 유무
     /// </summary>
     bool getCamera;
+
+    public bool GetCamera => getCamera;
 
     /// <summary>
     /// 사진찍기 쿨타임
@@ -114,7 +122,7 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     void GameRefresh()
     {
-        SetCutCount(1);
+        SetCutCount(0);
         getCamera = false;
         cutCoolTime = true;
     }
@@ -187,8 +195,8 @@ public class GameManager : Singleton<GameManager>
                 {
                     StartCoroutine(CoolTime(takePictureCoolTime));
                     Debug.Log("사진찍기");
-                    player.PlayerSliceBox.CheackSlice();
                     CutCount--;
+                    player.PlayerSliceBox.CheackSlice();
 
                 }
                 else

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,24 +17,31 @@ public class Player : MonoBehaviour
     readonly int anim_DownCameraHash = Animator.StringToHash("DownCamera");
 
     /// <summary>
-    /// 애니메이션 구분용 bool (true면 카메라 내리기, false면 카메라 올리기)
+    /// 카메라 상태 구분용 bool (true면 카메라가 올려져 있고 false면 카메라가 내려져 있다)
     /// </summary>
     bool usedCamera = false;
 
+    Transform CameraTransform;
 
+    public Action<bool> onCameraDisplay;
+
+    GameManager gameManager;
 
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        CameraTransform = transform.GetChild(2);
     }
 
     private void Start()
     {
         playerSliceBox = GetComponentInChildren<PlayerSliceBox>(true);
         playerSliceBox.onColliderInTrigger += TakePicture;
+
+        gameManager = GameManager.Instance;
     }
 
-
+    // camera 관련 =================================================================
     void Anim_UpCamera()
     {
         animator.ResetTrigger(anim_DownCameraHash);
@@ -46,21 +54,55 @@ public class Player : MonoBehaviour
         animator.SetTrigger(anim_DownCameraHash);
     }
 
+    /// <summary>
+    /// 애니메이션으로 비활성화
+    /// </summary>
+    void CameraDisable()
+    {
+        CameraTransform.gameObject.SetActive(false);
+        onCameraDisplay?.Invoke(usedCamera);
+        
+    }
 
+    /// <summary>
+    /// 애니메이션으로 활성화
+    /// </summary>
+    void CameraEnable()
+    {
+        CameraTransform.gameObject.SetActive(true);
+
+    }
+
+    /// <summary>
+    /// 카메라 활성화 토글
+    /// </summary>
     public void Toggle_Anim_Camera()
     {
-        
-        if (usedCamera)
+
+        if (gameManager.GetCamera)
         {
-            usedCamera = false;
-            Anim_DownCamera();
+            if (usedCamera)
+            {
+                usedCamera = false;
+                Anim_DownCamera();
+            }
+            else
+            {
+                usedCamera = true;
+                Anim_UpCamera();
+            }
         }
-        else
+
+    }
+
+    public void PlayerTakePicture()
+    {
+        if (gameManager.GetCamera && usedCamera)
         {
-            usedCamera = true;
-            Anim_UpCamera();
+            gameManager.TakaPicture();
         }
     }
+
     // mesh Slice 관련 =========================================================================================
 
     public void TakePicture(Collider collider)
