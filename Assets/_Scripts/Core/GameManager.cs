@@ -53,6 +53,11 @@ public class GameManager : Singleton<GameManager>
     int maxCutCount = 5;
 
     /// <summary>
+    /// 자르는 최대 횟수
+    /// </summary>
+    public int MaxCutCount => maxCutCount;
+
+    /// <summary>
     /// 자르는 횟수
     /// </summary>
     int cutCount = 5;

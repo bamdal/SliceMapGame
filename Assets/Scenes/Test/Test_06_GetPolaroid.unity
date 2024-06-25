@@ -1459,49 +1459,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &535074460 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2034179033855149247, guid: c3e4c3ee03edead40add87dea1b55afd,
-    type: 3}
-  m_PrefabInstance: {fileID: 697328506}
-  m_PrefabAsset: {fileID: 0}
---- !u!136 &535074463
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 535074460}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 1
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &535074464
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 535074460}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32b69f742bb25f7409b95585cae88a2d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemMoveSpeed: 2
-  filmCount: 3
 --- !u!1 &547674234
 GameObject:
   m_ObjectHideFlags: 0
@@ -1827,6 +1784,33 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 580330920}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &664974854 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4981305430645771877, guid: c93bf7a9080dbe04085b30949d253fb0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1404066134}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &664974859
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 664974854}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 6.1232336e-17}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &669866605
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1951,16 +1935,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1169853356155669376, guid: c3e4c3ee03edead40add87dea1b55afd,
-        type: 3}
-      propertyPath: m_Layer
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1192570673955154416, guid: c3e4c3ee03edead40add87dea1b55afd,
-        type: 3}
-      propertyPath: m_Layer
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 2034179033855149244, guid: c3e4c3ee03edead40add87dea1b55afd,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2016,23 +1990,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PolaroidCamera
       objectReference: {fileID: 0}
-    - target: {fileID: 2034179033855149247, guid: c3e4c3ee03edead40add87dea1b55afd,
-        type: 3}
-      propertyPath: m_Layer
-      value: 5
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2034179033855149247, guid: c3e4c3ee03edead40add87dea1b55afd,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 535074464}
-    - targetCorrespondingSourceObject: {fileID: 2034179033855149247, guid: c3e4c3ee03edead40add87dea1b55afd,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 535074463}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c3e4c3ee03edead40add87dea1b55afd, type: 3}
 --- !u!1 &701323890
 GameObject:
@@ -4304,19 +4265,9 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2868723338141230890, guid: 86c4894e9b9757a4a970f527dd6aa4af,
         type: 3}
-      propertyPath: m_Cameras.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2868723338141230890, guid: 86c4894e9b9757a4a970f527dd6aa4af,
-        type: 3}
       propertyPath: m_Cameras.Array.data[0]
       value: 
       objectReference: {fileID: 2043387567}
-    - target: {fileID: 5263057574614506782, guid: 86c4894e9b9757a4a970f527dd6aa4af,
-        type: 3}
-      propertyPath: m_CullingMask.m_Bits
-      value: 87
-      objectReference: {fileID: 0}
     - target: {fileID: 5623436413760522819, guid: 86c4894e9b9757a4a970f527dd6aa4af,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4435,15 +4386,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4080826743228166648, guid: c93bf7a9080dbe04085b30949d253fb0,
+        type: 3}
+      propertyPath: PolaroidPrefab
+      value: 
+      objectReference: {fileID: 7277543995814341869, guid: ba28587d6322e394c86b023b250ce352,
+        type: 3}
     - target: {fileID: 5433420151741906624, guid: c93bf7a9080dbe04085b30949d253fb0,
         type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6512168974904105104, guid: c93bf7a9080dbe04085b30949d253fb0, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4981305430645771877, guid: c93bf7a9080dbe04085b30949d253fb0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 664974859}
+    - targetCorrespondingSourceObject: {fileID: 1810129961496504958, guid: c93bf7a9080dbe04085b30949d253fb0,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: c93bf7a9080dbe04085b30949d253fb0, type: 3}
 --- !u!1 &1423815082
 GameObject:

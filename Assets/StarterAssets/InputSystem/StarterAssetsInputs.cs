@@ -60,6 +60,17 @@ namespace StarterAssets
         {
             RClickInput(context.performed);
         }
+
+		public void OnWheel(InputAction.CallbackContext context)
+		{
+			float ctx = context.ReadValue<float>();
+			if (ctx != 0)
+			{
+				WheelInput(ctx > 0);
+
+			}
+
+		}
 #endif
 
 
@@ -98,6 +109,15 @@ namespace StarterAssets
 				gameManager.Player.Toggle_Anim_Camera();
             }
         }
+
+		/// <summary>
+		/// true면 위로 휠 이동 false면 아래로 휠 이동
+		/// </summary>
+		/// <param name="newWheelState"></param>
+		public void WheelInput(bool newWheelState)
+		{
+			Debug.Log(newWheelState);
+		}
 
         private void OnApplicationFocus(bool hasFocus)
 		{
