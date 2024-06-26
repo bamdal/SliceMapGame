@@ -21,9 +21,34 @@ public class Player : MonoBehaviour
     /// </summary>
     bool usedCamera = false;
 
+    /// <summary>
+    /// 폴라로이드를 볼수있는 상태
+    /// </summary>
+    bool viewPolaroidPossible = false;
+
+    /// <summary>
+    /// 폴라로이드 확대용 토글(true 확대, false 축소)
+    /// </summary>
+    bool togglePolaroid = false;
+
+    /// <summary>
+    /// 폴라로이드 확대용 토글(true 확대, false 축소) 폴라로이드 확대시만 폴라로이드 찍기 가능
+    /// </summary>
+    public bool TogglePolaroid => togglePolaroid;
+
+    /// <summary>
+    /// 카메라 애니메이션 적용할 트랜스폼
+    /// </summary>
     Transform CameraTransform;
 
     public Action<bool> onCameraDisplay;
+
+    /// <summary>
+    /// 폴라로이드 사진들의 트랜스폼
+    /// </summary>
+    PolaroidTransform polaroidTransform;
+
+    public PolaroidTransform PolaroidTransform => polaroidTransform;
 
     GameManager gameManager;
 
@@ -31,6 +56,7 @@ public class Player : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         CameraTransform = transform.GetChild(2);
+        polaroidTransform = GetComponentInChildren<PolaroidTransform>();
     }
 
     private void Start()
@@ -39,6 +65,16 @@ public class Player : MonoBehaviour
         playerSliceBox.onColliderInTrigger += TakePicture;
 
         gameManager = GameManager.Instance;
+        gameManager.onViewPolaroid += (view) => 
+        {
+            viewPolaroidPossible = view; 
+            if (!view)
+            {
+                // 폴라로이드 강제로 내리기
+                polaroidTransform.ViewCurrentPolaroid(false);
+                togglePolaroid = false;
+            }
+        };
     }
 
     // camera 관련 =================================================================
@@ -60,6 +96,7 @@ public class Player : MonoBehaviour
     void CameraDisable()
     {
         CameraTransform.gameObject.SetActive(false);
+        polaroidTransform.gameObject.SetActive(false);
         onCameraDisplay?.Invoke(usedCamera);
         
     }
@@ -70,16 +107,16 @@ public class Player : MonoBehaviour
     void CameraEnable()
     {
         CameraTransform.gameObject.SetActive(true);
-
+        polaroidTransform.gameObject.SetActive(true);
     }
 
     /// <summary>
     /// 카메라 활성화 토글
     /// </summary>
-    public void Toggle_Anim_Camera()
+    void Toggle_Anim_Camera()
     {
 
-        if (gameManager.GetCamera)
+        if (gameManager.GetCamera && !gameManager.ViewPolaroid)
         {
             if (usedCamera)
             {
@@ -95,12 +132,61 @@ public class Player : MonoBehaviour
 
     }
 
-    public void PlayerTakePicture()
+    /// <summary>
+    /// 사진 찍기
+    /// </summary>
+    void PlayerTakePicture()
     {
         if (gameManager.GetCamera && usedCamera)
         {
             gameManager.TakaPicture();
         }
+    }
+
+    /// <summary>
+    /// 탭 누르는중에 우클릭시 확대 우클릭 때기, 탭때기 하면 확대 취소
+    /// </summary>
+    void Toggle_VeiwPolaroid()
+    {
+        if (!usedCamera && viewPolaroidPossible && polaroidTransform.TakePolaroidPossible())
+        {
+            if (togglePolaroid)
+            {
+                Debug.Log("폴라 내리기");
+                polaroidTransform.ViewCurrentPolaroid(false);
+
+                togglePolaroid = false;
+            }
+            else
+            {
+                Debug.Log("폴라 보기");
+                polaroidTransform.ViewCurrentPolaroid(true);
+                togglePolaroid = true;
+            }
+        }
+    }
+
+    void TakePolaroid()
+    {
+        if (!usedCamera && TogglePolaroid && polaroidTransform.TakePolaroidPossible())
+        {
+            gameManager.TakaPicture();
+            polaroidTransform.DisablePolaroid();
+            polaroidTransform.ViewCurrentPolaroid(false);
+            togglePolaroid = false;
+        }
+    }
+
+    public void LClickInput()
+    {
+        PlayerTakePicture();
+        TakePolaroid();
+    }
+
+    public void RClickInput()
+    {
+        Toggle_Anim_Camera();
+        Toggle_VeiwPolaroid();
     }
 
     // mesh Slice 관련 =========================================================================================

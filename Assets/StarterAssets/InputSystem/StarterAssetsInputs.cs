@@ -71,6 +71,11 @@ namespace StarterAssets
 			}
 
 		}
+
+		public void OnTab(InputAction.CallbackContext context)
+		{
+			TabInput(!context.canceled);
+		}
 #endif
 
 
@@ -98,7 +103,7 @@ namespace StarterAssets
 		{
 			if (newLClickState)
 			{
-				gameManager.Player.PlayerTakePicture();
+				gameManager.Player.LClickInput();
 			}
 		}
 
@@ -106,7 +111,7 @@ namespace StarterAssets
         {
             if (newLClickState)
             {
-				gameManager.Player.Toggle_Anim_Camera();
+				gameManager.Player.RClickInput();
             }
         }
 
@@ -116,7 +121,12 @@ namespace StarterAssets
 		/// <param name="newWheelState"></param>
 		public void WheelInput(bool newWheelState)
 		{
-			Debug.Log(newWheelState);
+			gameManager.Player.PolaroidTransform.SetPolaroidIndex(newWheelState);
+		}
+
+		public void TabInput(bool newTabState)
+		{
+			gameManager.ViewPolaroid = newTabState;
 		}
 
         private void OnApplicationFocus(bool hasFocus)

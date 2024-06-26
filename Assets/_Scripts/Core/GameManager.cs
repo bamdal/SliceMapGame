@@ -106,6 +106,30 @@ public class GameManager : Singleton<GameManager>
 
     public bool GetCamera => getCamera;
 
+    bool viewPolaroid;
+
+    /// <summary>
+    /// tab 누르고 있는중
+    /// </summary>
+    public bool ViewPolaroid
+    {
+        get => viewPolaroid;
+        set
+        {
+            if(viewPolaroid != value)
+            {
+
+                viewPolaroid = value;
+                onViewPolaroid?.Invoke(viewPolaroid);
+            }
+        }
+    }
+
+    /// <summary>
+    /// 탭 누를시 폴라로이드 보는 타이밍 체크용
+    /// </summary>
+    public Action<bool> onViewPolaroid;
+
     /// <summary>
     /// 사진찍기 쿨타임
     /// </summary>
@@ -199,9 +223,18 @@ public class GameManager : Singleton<GameManager>
                 if (CutCount > 0)
                 {
                     StartCoroutine(CoolTime(takePictureCoolTime));
-                    Debug.Log("사진찍기");
-                    CutCount--;
-                    player.PlayerSliceBox.CheackSlice();
+                    if (player.TogglePolaroid)
+                    {
+                        // 폴라로이드
+                        player.PlayerSliceBox.CheackSlice();
+                    }
+                    else
+                    {
+                        CutCount--;
+                        Debug.Log("사진찍기");
+                        player.PlayerSliceBox.CheackSlice();
+                    }
+
 
                 }
                 else

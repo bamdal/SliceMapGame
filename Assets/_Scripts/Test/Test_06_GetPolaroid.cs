@@ -12,20 +12,22 @@ public class Test_06_GetPolaroid : TestBase
         Debug.Log(test.Count);
         if (test.Count > 0)
         {
-            if(test.TryGetValue(1, out List<GameObject> list1))
+            if(test.TryGetValue(0, out List<GameObject> list1))
             {
                 Debug.Log(list1);
             }
-            if (test.TryGetValue(2, out List<GameObject> list2))
+            if (test.TryGetValue(1, out List<GameObject> list2))
             {
                 Debug.Log(list2);
 
             }
-            if (test.TryGetValue(3, out List<GameObject> list3))
+            if (test.TryGetValue(2, out List<GameObject> list3))
             {
                 Debug.Log(list3);
             }
         }
     }
+
+    
 #endif
 }

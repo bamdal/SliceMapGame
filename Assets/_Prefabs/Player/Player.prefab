@@ -617,6 +617,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 50806b4b-0890-43e3-8325-fe43815fd94d
     m_ActionName: Player/Wheel[/Mouse/scroll/down,/Mouse/scroll/up]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2988972839183133032}
+        m_TargetAssemblyTypeName: StarterAssets.StarterAssetsInputs, Assembly-CSharp
+        m_MethodName: OnTab
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: fc45a1f9-10d4-4a79-98cd-ddd3d58df8e8
+    m_ActionName: Player/Tab[/Keyboard/tab]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -669,11 +685,11 @@ Transform:
   m_GameObject: {fileID: 5907482212662627596}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1136385579604404248}
+  - {fileID: 5743377236978646649}
   m_Father: {fileID: 1224101628826743021}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4080826743228166648
@@ -688,6 +704,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54b44384ea4018843b5f63466f1e4174, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PolaroidPrefab: {fileID: 7277543995814341869, guid: ba28587d6322e394c86b023b250ce352,
+    type: 3}
 --- !u!1 &6759567578875767390
 GameObject:
   m_ObjectHideFlags: 0
@@ -877,7 +895,7 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 95238176967093220}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &2440424681545130632
+--- !u!1001 &7039111727459906793
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -940,14 +958,19 @@ PrefabInstance:
       propertyPath: m_Name
       value: Polaroid
       objectReference: {fileID: 0}
+    - target: {fileID: 7277543995814341869, guid: ba28587d6322e394c86b023b250ce352,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ba28587d6322e394c86b023b250ce352, type: 3}
---- !u!4 &1136385579604404248 stripped
+--- !u!4 &5743377236978646649 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3322356870389533328, guid: ba28587d6322e394c86b023b250ce352,
     type: 3}
-  m_PrefabInstance: {fileID: 2440424681545130632}
+  m_PrefabInstance: {fileID: 7039111727459906793}
   m_PrefabAsset: {fileID: 0}

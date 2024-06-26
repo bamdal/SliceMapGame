@@ -75,7 +75,11 @@ public class SliceObject : Slice
 
                         // 맨 마지막 에 깔끔하게 잘려진 오브젝트들
                         submesh.gameObject.SetActive(false);
-                        inObject.SliceObjectInList(submesh);
+                        if (!gameManager.Player.TogglePolaroid && gameManager.GetCamera)
+                        {
+                            inObject.SliceObjectInList(submesh);
+
+                        }
                     }
 
 

@@ -20,24 +20,65 @@ public class PolaroidTransform : MonoBehaviour
     /// </summary>
     Vector3 nomalPosition = new Vector3(4, -2.5f, 10);
 
+    Vector3 destination = Vector3.zero;
+
+ 
     /// <summary>
-    /// 휠로 선택되면 올라갈 Y 포지션
+    /// 현재 선택한 사진 인덱스 (0~MaxCutCount-1);
     /// </summary>
-    float selectYposition = 1.0f;
+    int currnetPolaroidIndex;
+
+    public int CurrnetPolaroidIndex
+    {
+        get => currnetPolaroidIndex;
+        set
+        {
+
+
+                CurrentPolaroidExit(currnetPolaroidIndex);
+                currnetPolaroidIndex = value;
+                CurrentPolaroidEnter(currnetPolaroidIndex);
+
+            
+            
+        }
+    }
 
     /// <summary>
-    /// 사진끼리의 패딩
+    /// 사진찍힌 폴라로이드 검색용 커서
     /// </summary>
-    float padding = 0.2f;
+    int selectedCurser = 0;
+
+
+    /// <summary>
+    /// 사진이 찍혀 활성화된 폴라로이드 인덱스
+    /// </summary>
+    List<int> enablePolaroids;
+
+    /// <summary>
+    /// tab을 눌러 폴라로이드를 보고 있는 상태
+    /// </summary>
+    bool viewPolaroid = false;
+
+    GameManager gameManager;
     private void Awake()
     {
-
+        enablePolaroids = new List<int>();
     }
 
     private void Start()
     {
-        polaroids = new Polaroid[GameManager.Instance.MaxCutCount];
+        gameManager = GameManager.Instance;
+        polaroids = new Polaroid[gameManager.MaxCutCount];
+        gameManager.InObject.onPolaroidIndex += EnablePolaroid;
+        gameManager.onViewPolaroid += SetActivate;
         Init();
+    }
+
+    private void Update()
+    {
+        // 목적지로 지속적으로 이동
+        transform.localPosition = Vector3.Lerp(transform.localPosition, destination, 0.7f);
     }
 
     void Init()
@@ -45,13 +86,116 @@ public class PolaroidTransform : MonoBehaviour
         for (int i = 0; i < polaroids.Length; i++)
         {
             GameObject obj = Instantiate(PolaroidPrefab, transform);
-            obj.transform.position = transform.position + nomalPosition;
+            //obj.transform.position = transform.position + nomalPosition;
             polaroids[i] = obj?.GetComponent<Polaroid>();
+            polaroids[i].SetIndex(i);
+            polaroids[i].SetDestination(transform.position + nomalPosition);
             obj.SetActive(false);
         }
+
+        destination.y = -5;
+    }
+
+    /// <summary>
+    /// 사진이 찍혔을때 해당 폴라로이드 활성화
+    /// </summary>
+    /// <param name="index">폴라로이드 인덱스</param>
+    public void EnablePolaroid(int index)
+    {
+        polaroids[index].gameObject.SetActive(true);
+        enablePolaroids.Add(index);
     }
 
 
 
+    public void DisablePolaroid()
+    {
+        polaroids[currnetPolaroidIndex].gameObject.SetActive(false);
+        enablePolaroids.RemoveAt(selectedCurser);
+    }
 
+    /// <summary>
+    /// 부울값에 따라 index자동 조정
+    /// </summary>
+    /// <param name="input"></param>
+    public void SetPolaroidIndex(bool input)
+    {
+        if (gameManager.ViewPolaroid && !gameManager.Player.TogglePolaroid)
+        {
+            if (input)
+            {
+                selectedCurser++;
+
+            }
+            else
+            {
+                selectedCurser--;
+            }
+            selectedCurser = Mathf.Clamp(selectedCurser, 0, enablePolaroids.Count - 1);
+            if (enablePolaroids.Count > 0)
+            {
+                CurrnetPolaroidIndex = enablePolaroids[selectedCurser];
+                Debug.Log(CurrnetPolaroidIndex);
+
+            }
+        }
+
+    }
+
+    /// <summary>
+    /// 현재 커서가 향해서 위로 올라올 폴라로이드
+    /// </summary>
+    /// <param name="index"></param>
+    void CurrentPolaroidEnter(int index)
+    {
+        polaroids[index].Selected();
+    }
+
+    /// <summary>
+    /// 현재 커서가 나가서 아래로 내려갈 폴라로이드
+    /// </summary>
+    /// <param name="index"></param>
+    void CurrentPolaroidExit(int index)
+    {
+        polaroids[index].UnSeleted();
+    }
+
+    /// <summary>
+    /// tab 버튼 활성화시 유뮤
+    /// </summary>
+    /// <param name="active">true면 탭 눌림 false는 탭에서 손 땜</param>
+    void SetActivate(bool active)
+    {
+        if (active)
+        {
+            destination = Vector3.zero;
+        }
+        else
+        {
+            destination.y = -5.0f;
+        }
+    }
+
+    /// <summary>
+    /// 우클릭시 폴라로이드 보기
+    /// </summary>
+    /// <param name="view"></param>
+    public void ViewCurrentPolaroid(bool view)
+    {
+        if (view)
+        {
+            polaroids[CurrnetPolaroidIndex].SetDestination(viewPosition);
+
+        }
+        else
+        {
+            // 원래 위치로
+            polaroids[CurrnetPolaroidIndex].SetDestination(nomalPosition+new Vector3(0, polaroids[CurrnetPolaroidIndex].selectYposition,0));
+        }
+    }
+
+    public bool TakePolaroidPossible()
+    {
+        return polaroids[currnetPolaroidIndex].PolaroidSelected;
+    }
 }

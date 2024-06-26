@@ -1,4 +1,5 @@
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,9 +15,12 @@ public class InObject : MonoBehaviour
 
     Dictionary<int,List<GameObject>> polaroidPicture = new Dictionary<int,List<GameObject>>();
 
+    public Action<int> onPolaroidIndex;
+
     private void Awake()
     {
-        PlayerCutCount = 0;
+        // 첫번째 키값을 0으로 하기위함
+        PlayerCutCount = -1;
     }
 
     private void Start()
@@ -25,13 +29,17 @@ public class InObject : MonoBehaviour
         {
             if (count < cutcountZero)
             {
-                PlayerCutCount++; 
-
+                PlayerCutCount++;
+                onPolaroidIndex?.Invoke(PlayerCutCount);
             }
             cutcountZero = count;
         };
     }
 
+    /// <summary>
+    /// 폴라로이드 정보 저장하는 함수
+    /// </summary>
+    /// <param name="obj"></param>
     public void SliceObjectInList(GameObject obj)
     {
         if (!polaroidPicture.ContainsKey(PlayerCutCount))
