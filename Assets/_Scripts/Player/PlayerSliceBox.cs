@@ -22,7 +22,6 @@ public class PlayerSliceBox : MonoBehaviour
 
     Player player;
 
-    bool delay = true;
 
     public Action<Collider> onColliderInTrigger;
 
@@ -89,12 +88,7 @@ public class PlayerSliceBox : MonoBehaviour
 
     }*/
 
-    IEnumerator Delay(float countDelay)
-    {
-        yield return new WaitForSeconds(countDelay);
-/*        slicerBox.enabled = false;*/
-        delay = true;
-    }
+
 
     void OnDrawGizmos()
     {

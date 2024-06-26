@@ -54,8 +54,12 @@ public class SliceObject : Slice
                 GameObject submesh;
                 if (index == 0)
                 {
-                    submesh = Instantiate(this.gameObject, outObject.transform);
-                    RefreshMesh(index, mesh, submesh);
+                    if (gameManager.Player.TogglePolaroid)
+                    {
+                        submesh = Instantiate(this.gameObject, outObject.transform);
+                        RefreshMesh(index, mesh, submesh);
+                    }
+
 
                 }
                 else
@@ -72,13 +76,13 @@ public class SliceObject : Slice
                     }
                     else
                     {
-
+                        
                         // 맨 마지막 에 깔끔하게 잘려진 오브젝트들
                         submesh.gameObject.SetActive(false);
                         if (!gameManager.Player.TogglePolaroid && gameManager.GetCamera)
                         {
                             inObject.SliceObjectInList(submesh);
-
+                            submesh.transform.parent = GameManager.Instance.Player.transform.GetChild(0).GetChild(1);
                         }
                     }
 

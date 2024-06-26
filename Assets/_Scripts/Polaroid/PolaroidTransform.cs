@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Windows;
 
 public class PolaroidTransform : MonoBehaviour
 {
@@ -22,7 +24,7 @@ public class PolaroidTransform : MonoBehaviour
 
     Vector3 destination = Vector3.zero;
 
- 
+
     /// <summary>
     /// 현재 선택한 사진 인덱스 (0~MaxCutCount-1);
     /// </summary>
@@ -34,13 +36,11 @@ public class PolaroidTransform : MonoBehaviour
         set
         {
 
+            CurrentPolaroidExit(currnetPolaroidIndex);
+            currnetPolaroidIndex = value;
+            CurrentPolaroidEnter(currnetPolaroidIndex);
 
-                CurrentPolaroidExit(currnetPolaroidIndex);
-                currnetPolaroidIndex = value;
-                CurrentPolaroidEnter(currnetPolaroidIndex);
 
-            
-            
         }
     }
 
@@ -55,10 +55,7 @@ public class PolaroidTransform : MonoBehaviour
     /// </summary>
     List<int> enablePolaroids;
 
-    /// <summary>
-    /// tab을 눌러 폴라로이드를 보고 있는 상태
-    /// </summary>
-    bool viewPolaroid = false;
+
 
     GameManager gameManager;
     private void Awake()
@@ -107,7 +104,9 @@ public class PolaroidTransform : MonoBehaviour
     }
 
 
-
+    /// <summary>
+    /// 폴라로이드 사용
+    /// </summary>
     public void DisablePolaroid()
     {
         polaroids[currnetPolaroidIndex].gameObject.SetActive(false);
@@ -142,6 +141,14 @@ public class PolaroidTransform : MonoBehaviour
 
     }
 
+
+    public void Reload()
+    {
+        CurrnetPolaroidIndex = enablePolaroids[0];
+
+
+    }
+
     /// <summary>
     /// 현재 커서가 향해서 위로 올라올 폴라로이드
     /// </summary>
@@ -157,7 +164,7 @@ public class PolaroidTransform : MonoBehaviour
     /// <param name="index"></param>
     void CurrentPolaroidExit(int index)
     {
-        polaroids[index].UnSeleted();
+        polaroids[index].UnSelected();
     }
 
     /// <summary>
@@ -190,7 +197,7 @@ public class PolaroidTransform : MonoBehaviour
         else
         {
             // 원래 위치로
-            polaroids[CurrnetPolaroidIndex].SetDestination(nomalPosition+new Vector3(0, polaroids[CurrnetPolaroidIndex].selectYposition,0));
+            polaroids[CurrnetPolaroidIndex].SetDestination(nomalPosition + new Vector3(0, polaroids[CurrnetPolaroidIndex].selectYposition, 0));
         }
     }
 

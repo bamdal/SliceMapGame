@@ -38,7 +38,7 @@ public class GameManager : Singleton<GameManager>
         set
         {
 
-            if(gameState != value)
+            if (gameState != value)
             {
                 GameStateExit(gameState);
                 gameState = value;
@@ -70,7 +70,7 @@ public class GameManager : Singleton<GameManager>
         get => cutCount;
         set
         {
-            cutCount = Mathf.Clamp(value,0,maxCutCount);
+            cutCount = Mathf.Clamp(value, 0, maxCutCount);
             onCutCount?.Invoke(cutCount);
         }
     }
@@ -92,7 +92,7 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public OutObject OutObject => outObject;
 
-    
+
 
     /// <summary>
     /// 자르기 가능 유무 체크
@@ -116,7 +116,7 @@ public class GameManager : Singleton<GameManager>
         get => viewPolaroid;
         set
         {
-            if(viewPolaroid != value)
+            if (viewPolaroid != value)
             {
 
                 viewPolaroid = value;
@@ -142,7 +142,7 @@ public class GameManager : Singleton<GameManager>
         inObject = GetComponentInChildren<InObject>();
         outObject = GetComponentInChildren<OutObject>();
 
-     
+
         GameRefresh();
     }
 
@@ -154,6 +154,14 @@ public class GameManager : Singleton<GameManager>
         SetCutCount(0);
         getCamera = false;
         cutCoolTime = true;
+        while (inObject.transform.childCount > 0)
+        {
+            Destroy(inObject.transform.GetChild(0));
+        }
+        while (outObject.transform.childCount > 0)
+        {
+            Destroy(outObject.transform.GetChild(0));
+        }
     }
 
 
@@ -162,8 +170,10 @@ public class GameManager : Singleton<GameManager>
         switch (gameState)
         {
             case GameState.None:
+                GameRefresh();
                 break;
             case GameState.GameReady:
+                GameRefresh();
                 break;
             case GameState.GameStarted:
                 break;
@@ -183,7 +193,7 @@ public class GameManager : Singleton<GameManager>
             case GameState.GameReady:
                 break;
             case GameState.GameStarted:
-               
+
                 break;
             case GameState.GameFinished:
                 break;
@@ -215,7 +225,15 @@ public class GameManager : Singleton<GameManager>
     public void TakaPicture()
     {
         // 사진 찍기 가능 여부 체크후 횟수감소와 찍기구현
-        if (cutCoolTime)
+        if (player.TogglePolaroid)
+        {
+
+            // 폴라로이드
+            player.PlayerSliceBox.CheackSlice();
+
+
+        }
+        else if (cutCoolTime)
         {
             if (getCamera)
             {
@@ -246,7 +264,8 @@ public class GameManager : Singleton<GameManager>
             {
                 Debug.Log($"현재 사진 찍기 불가능 상태 getCamera : {getCamera}");
             }
-        }else
+        }
+        else
         {
             Debug.Log($"현재 사진 찍기 불가능 상태 쿨타임중");
         }

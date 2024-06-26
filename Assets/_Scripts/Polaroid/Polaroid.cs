@@ -66,7 +66,7 @@ public class Polaroid : MonoBehaviour
         selected = true;
     }
 
-    public void UnSeleted()
+    public void UnSelected()
     {
         if (selected)
         {

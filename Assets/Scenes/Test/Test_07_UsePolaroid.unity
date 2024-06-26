@@ -1963,6 +1963,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: PolaroidCamera
       objectReference: {fileID: 0}
+    - target: {fileID: 8704529569064588151, guid: c3e4c3ee03edead40add87dea1b55afd,
+        type: 3}
+      propertyPath: filmCount
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2183,11 +2188,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 882319306632366257, guid: eb9c12a13de0a544cb695401e10aa267,
-        type: 3}
-      propertyPath: takePictureCoolTime
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4745138791289903614, guid: eb9c12a13de0a544cb695401e10aa267,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2368,6 +2368,54 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 820120160}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &852430204
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 852430206}
+  - component: {fileID: 852430205}
+  m_Layer: 0
+  m_Name: Test_07_UsePolaroid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 2147483647
+  m_IsActive: 1
+--- !u!114 &852430205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 852430204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9331d926ae19c2f4da5d44ad99c689ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  seed: -1
+  SliceObject: []
+  target: {fileID: 0}
+  i: 0
+--- !u!4 &852430206
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 852430204}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &854361058
 GameObject:
   m_ObjectHideFlags: 0
@@ -2855,51 +2903,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4752637a5f002443aa7c2da4e5a420b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &955030783
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 955030784}
-  - component: {fileID: 955030785}
-  m_Layer: 0
-  m_Name: Test_06_GetPolaroid
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &955030784
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 955030783}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.9269304, y: 12.339799, z: -24.91724}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &955030785
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 955030783}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a15ce9742f6de54d85380a8baa94e6a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  seed: -1
 --- !u!1001 &968363653
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4241,6 +4244,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2868723338141230890, guid: 86c4894e9b9757a4a970f527dd6aa4af,
+        type: 3}
+      propertyPath: m_Cameras.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2868723338141230890, guid: 86c4894e9b9757a4a970f527dd6aa4af,
         type: 3}
       propertyPath: m_Cameras.Array.data[0]
@@ -6218,10 +6226,10 @@ SceneRoots:
   - {fileID: 861320759}
   - {fileID: 71982567}
   - {fileID: 1213680101}
-  - {fileID: 955030784}
   - {fileID: 1399113685}
   - {fileID: 1404066134}
   - {fileID: 552636716}
   - {fileID: 697328506}
   - {fileID: 1086018114}
   - {fileID: 6107403258666274188}
+  - {fileID: 852430206}

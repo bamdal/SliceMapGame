@@ -140,6 +140,8 @@ public class Player : MonoBehaviour
         if (gameManager.GetCamera && usedCamera)
         {
             gameManager.TakaPicture();
+            polaroidTransform.Reload();
+
         }
     }
 
@@ -173,6 +175,7 @@ public class Player : MonoBehaviour
             gameManager.TakaPicture();
             polaroidTransform.DisablePolaroid();
             polaroidTransform.ViewCurrentPolaroid(false);
+            gameManager.InObject.SliceObjectEnable(polaroidTransform.CurrnetPolaroidIndex);
             togglePolaroid = false;
         }
     }
@@ -240,8 +243,8 @@ public class Player : MonoBehaviour
                 }
             }
         }
-
-        collider.gameObject.SetActive(false);
+        if(TogglePolaroid)
+            collider.gameObject.SetActive(false);
     }
 
     /// <summary>

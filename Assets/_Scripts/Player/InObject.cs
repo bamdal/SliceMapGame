@@ -49,6 +49,19 @@ public class InObject : MonoBehaviour
         polaroidPicture[PlayerCutCount].Add(obj);
     }
 
+    public void SliceObjectEnable(int index)
+    {
+        polaroidPicture.TryGetValue(index, out List<GameObject> list);
+        if (list != null)
+        {
+            foreach (GameObject obj in list)
+            {
+                obj.transform.parent = transform;
+                obj.SetActive(true);
+            }
+        }
+    }
+
 #if UNITY_EDITOR
     public Dictionary<int, List<GameObject>> Test_GetPolaroid()
     {
