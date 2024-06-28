@@ -10,6 +10,7 @@ public class CameraUI : MonoBehaviour
 
     TextMeshProUGUI filmCountText;
     
+    GameManager gameManager;
 
     private void Awake()
     {
@@ -21,8 +22,21 @@ public class CameraUI : MonoBehaviour
 
     private void Start()
     {
-        GameManager.Instance.Player.onCameraDisplay += OnCameraDisplay;
-        GameManager.Instance.onCutCount += (count) => { filmCountText.text = count.ToString(); };
+        gameManager = GameManager.Instance;
+        gameManager.Player.onCameraDisplay += OnCameraDisplay;
+        gameManager.onCutCount += OnFilmCount;
+    }
+
+    private void OnFilmCount(int count)
+    {
+        filmCountText.text = count.ToString();
+    }
+
+    private void OnDestroy()
+    {
+        if(gameManager.Player!=null)
+            gameManager.Player.onCameraDisplay -= OnCameraDisplay;
+        gameManager.onCutCount -= OnFilmCount;
     }
 
     private void OnCameraDisplay(bool cameraActivate)

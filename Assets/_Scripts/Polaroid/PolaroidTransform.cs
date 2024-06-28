@@ -66,10 +66,8 @@ public class PolaroidTransform : MonoBehaviour
     private void Start()
     {
         gameManager = GameManager.Instance;
-        polaroids = new Polaroid[gameManager.MaxCutCount];
-        gameManager.InObject.onPolaroidIndex += EnablePolaroid;
-        gameManager.onViewPolaroid += SetActivate;
-        Init();
+        StartCoroutine(Init());
+        
     }
 
     private void Update()
@@ -78,10 +76,20 @@ public class PolaroidTransform : MonoBehaviour
         transform.localPosition = Vector3.Lerp(transform.localPosition, destination, 0.7f);
     }
 
-    void Init()
+    IEnumerator Init()
     {
+        polaroids = new Polaroid[gameManager.MaxCutCount];
+
+        while (gameManager.InObject.onPolaroidIndex != null)
+        {
+            yield return null;
+        }
+        gameManager.InObject.onPolaroidIndex += EnablePolaroid;
+        gameManager.onViewPolaroid += SetActivate;
+
         for (int i = 0; i < polaroids.Length; i++)
         {
+            yield return null;
             GameObject obj = Instantiate(PolaroidPrefab, transform);
             //obj.transform.position = transform.position + nomalPosition;
             polaroids[i] = obj?.GetComponent<Polaroid>();
@@ -91,6 +99,12 @@ public class PolaroidTransform : MonoBehaviour
         }
 
         destination.y = -5;
+    }
+
+    private void OnDestroy()
+    {
+        gameManager.InObject.onPolaroidIndex -= EnablePolaroid;
+        gameManager.onViewPolaroid -= SetActivate;
     }
 
     /// <summary>
@@ -144,7 +158,8 @@ public class PolaroidTransform : MonoBehaviour
 
     public void Reload()
     {
-        CurrnetPolaroidIndex = enablePolaroids[0];
+        if(enablePolaroids.Count>0)
+            CurrnetPolaroidIndex = enablePolaroids[0];
 
 
     }

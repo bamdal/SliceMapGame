@@ -8,12 +8,19 @@ public class ItemBase : MonoBehaviour
 
     float elpasedTime = 0.0f;
 
+    Vector3 origin = Vector3.zero;
+
     Vector3 move = Vector3.zero;
+
+    private void Awake()
+    {
+        origin = transform.position;
+    }
 
     private void Update()
     {
         elpasedTime += Time.deltaTime* itemMoveSpeed;
         move.y =Mathf.Abs( Mathf.Sin(elpasedTime))*0.1f;
-        transform.position = new Vector3(transform.position.x, move.y, transform.position.z);
+        transform.position = new Vector3(transform.position.x, origin.y + move.y, transform.position.z);
     }
 }

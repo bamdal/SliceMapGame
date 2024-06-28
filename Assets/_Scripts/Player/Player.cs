@@ -65,16 +65,24 @@ public class Player : MonoBehaviour
         playerSliceBox.onColliderInTrigger += TakePicture;
 
         gameManager = GameManager.Instance;
-        gameManager.onViewPolaroid += (view) => 
+        gameManager.onViewPolaroid += DownPolaroid;
+       
+    }
+
+    private void OnDestroy()
+    {
+        gameManager.onViewPolaroid -= DownPolaroid;
+    }
+
+    private void DownPolaroid(bool view)
+    {
+        viewPolaroidPossible = view;
+        if (!view)
         {
-            viewPolaroidPossible = view; 
-            if (!view)
-            {
-                // 폴라로이드 강제로 내리기
-                polaroidTransform.ViewCurrentPolaroid(false);
-                togglePolaroid = false;
-            }
-        };
+            // 폴라로이드 강제로 내리기
+            polaroidTransform.ViewCurrentPolaroid(false);
+            togglePolaroid = false;
+        }
     }
 
     // camera 관련 =================================================================

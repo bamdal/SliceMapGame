@@ -26,6 +26,12 @@ public class RestartUI : MonoBehaviour
         GameManager.Instance.onTimeOut += Restart;
     }
 
+    private void OnDestroy()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.onTimeOut -= Restart;
+    }
+
     void Restart(bool reset)
     {
         if(reset)

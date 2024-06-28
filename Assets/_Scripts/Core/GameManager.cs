@@ -151,17 +151,19 @@ public class GameManager : Singleton<GameManager>
 
     public Action<bool> onTimeOut;
 
+
     protected override void OnInitialize()
     {
-        onTimeOut = null;
-        onViewPolaroid = null;
-        onCutCount = null;
+        //onTimeOut = null;
+        //onViewPolaroid = null;
+        //onCutCount = null;
         player = FindAnyObjectByType<Player>();
-
-        inObject = GetComponentInChildren<InObject>();
-        outObject = GetComponentInChildren<OutObject>();
-
-
+        if(inObject == null)
+            inObject = GetComponentInChildren<InObject>();
+        if(outObject == null)
+            outObject = GetComponentInChildren<OutObject>();
+        //inObject.onPolaroidIndex = null;
+        inObject.Init();
         GameRefresh();
     }
 
@@ -173,13 +175,18 @@ public class GameManager : Singleton<GameManager>
         SetCutCount(0);
         getCamera = false;
         cutCoolTime = true;
-        while (inObject.transform.childCount > 0)
+        StartCoroutine(DestroyChild(inObject.transform, 100));
+        StartCoroutine(DestroyChild(outObject.transform, 100));
+    }
+
+    IEnumerator DestroyChild(Transform transform, int loopCount)
+    {
+        int count = 0;
+        while (transform.childCount > 0 && count < loopCount)
         {
-            Destroy(inObject.transform.GetChild(0));
-        }
-        while (outObject.transform.childCount > 0)
-        {
-            Destroy(outObject.transform.GetChild(0));
+            Destroy(transform.GetChild(0).gameObject);
+            count++;
+            yield return null;  
         }
     }
 

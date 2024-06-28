@@ -19,6 +19,11 @@ public class InObject : MonoBehaviour
 
     private void Awake()
     {
+        Init();
+    }
+
+    public void Init()
+    {
         // 첫번째 키값을 0으로 하기위함
         PlayerCutCount = -1;
     }
