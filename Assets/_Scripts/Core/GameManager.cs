@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum GameState
 {
@@ -32,7 +34,7 @@ public class GameManager : Singleton<GameManager>
 
     GameState gameState = GameState.None;
 
-    GameState GameState
+    public GameState GameState
     {
         get => gameState;
         set
@@ -135,8 +137,25 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public float takePictureCoolTime = 3.0f;
 
+    
+    // 리셋용 변수들
+    Coroutine resetSceneCorutine;
+    AsyncOperation resetSceneAsync;
+
+    float elapsedTime = 0;
+    bool timeOut => elapsedTime > timeThreshold;
+
+    float timeThreshold = 1.2f;
+
+    public float TimeThreshold => timeThreshold;
+
+    public Action<bool> onTimeOut;
+
     protected override void OnInitialize()
     {
+        onTimeOut = null;
+        onViewPolaroid = null;
+        onCutCount = null;
         player = FindAnyObjectByType<Player>();
 
         inObject = GetComponentInChildren<InObject>();
@@ -164,6 +183,53 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    /// <summary>
+    /// R버튼 누르고 있을시 재시작 코루틴 시작
+    /// </summary>
+    /// <param name="reset">true일때 버튼누르는중 false는 버튼에서 손 땜</param>
+    public void ReloadScene(bool reset)
+    {
+        onTimeOut?.Invoke(reset);
+        if (reset)
+        {
+            if (resetSceneCorutine == null)
+            {
+                elapsedTime = 0;
+                resetSceneCorutine = StartCoroutine(AsyncReloadScene());
+                Debug.Log("리셋누름");
+            }
+        }
+        else
+        {
+            if (resetSceneCorutine != null)
+            {
+                StopCoroutine(resetSceneCorutine);
+                resetSceneCorutine = null;
+                resetSceneAsync = null;
+                Debug.Log("리셋종료");
+            }
+        }
+    }
+
+    /// <summary>
+    /// 씬 재시작 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator AsyncReloadScene()
+    {
+        
+        while (!timeOut)
+        {
+            elapsedTime += Time.deltaTime;
+            Debug.Log(elapsedTime);
+            yield return null;
+            if (timeOut)
+            {
+                onTimeOut = null;   // 씬이동 후 전에 남아있던 UI 접근 방지 초기화
+                resetSceneAsync = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
+            }
+        }
+    }
 
     void GameStateExit(GameState gameState)
     {

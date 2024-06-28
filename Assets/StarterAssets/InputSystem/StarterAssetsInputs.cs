@@ -76,6 +76,11 @@ namespace StarterAssets
 		{
 			TabInput(!context.canceled);
 		}
+
+		public void OnRestart(InputAction.CallbackContext context)
+		{
+			RestartInput(context.performed);
+		}
 #endif
 
 
@@ -114,6 +119,11 @@ namespace StarterAssets
 				gameManager.Player.RClickInput();
             }
         }
+
+		public void RestartInput(bool newRestartState)
+		{
+			gameManager.ReloadScene(newRestartState);
+		}
 
 		/// <summary>
 		/// true면 위로 휠 이동 false면 아래로 휠 이동
