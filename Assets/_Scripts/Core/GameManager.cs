@@ -106,7 +106,20 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     bool getCamera;
 
-    public bool GetCamera => getCamera;
+    public bool GetCamera
+    {
+        get => getCamera;
+        set
+        {
+            getCamera = value;
+            if (getCamera)
+            {
+                onGetCamera?.Invoke();
+            }
+        }
+    }
+
+    public Action onGetCamera;
 
     bool viewPolaroid;
 
