@@ -186,7 +186,7 @@ public class GameManager : Singleton<GameManager>
     void GameRefresh()
     {
         SetCutCount(0);
-        getCamera = false;
+        GetCamera = false;
         cutCoolTime = true;
         StartCoroutine(DestroyChild(inObject.transform, 100));
         StartCoroutine(DestroyChild(outObject.transform, 100));
@@ -321,7 +321,7 @@ public class GameManager : Singleton<GameManager>
         }
         else if (cutCoolTime)
         {
-            if (getCamera)
+            if (GetCamera)
             {
 
                 if (CutCount > 0)
@@ -348,7 +348,7 @@ public class GameManager : Singleton<GameManager>
             }
             else
             {
-                Debug.Log($"현재 사진 찍기 불가능 상태 getCamera : {getCamera}");
+                Debug.Log($"현재 사진 찍기 불가능 상태 GetCamera : {GetCamera}");
             }
         }
         else
@@ -365,7 +365,7 @@ public class GameManager : Singleton<GameManager>
     public void PlayerUseCamara(bool able)
     {
         StopAllCoroutines();
-        getCamera = able;
+        GetCamera = able;
     }
 
     /// <summary>

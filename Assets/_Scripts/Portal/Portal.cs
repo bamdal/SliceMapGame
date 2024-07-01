@@ -7,6 +7,10 @@ using UnityEngine.SceneManagement;
 public enum StageName
 {
     Stage1 =2,
+    Stage2,
+    Stage3,
+    Stage4,
+    Stage5,
 }
 
 public class Portal : MonoBehaviour

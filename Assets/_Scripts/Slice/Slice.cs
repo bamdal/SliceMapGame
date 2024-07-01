@@ -133,7 +133,7 @@ public class Slice : MonoBehaviour
     }
 
     /// <summary>
-    /// plane이 지금 월드 좌표 기준이 아니라 로컬기준으로 계산을 해버려서  잘못된 결과 나옴
+    /// plane을 기준으로 자르기
     /// </summary>
     /// <param name="meshFilter"></param>
     /// <param name="cutPoint"></param>
@@ -238,7 +238,7 @@ public class Slice : MonoBehaviour
         }else
         {
 
-            return null;
+            return new[] { originMesh};
         }
         // 잘린 두개의 매쉬를 리턴
         return new[] { positiveMesh.GetSlicedObjectMesh(), negativeMesh.GetSlicedObjectMesh() };

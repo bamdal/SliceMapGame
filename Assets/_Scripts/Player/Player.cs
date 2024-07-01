@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.ProBuilder;
 
 public class Player : MonoBehaviour
 {
@@ -225,6 +226,10 @@ public class Player : MonoBehaviour
         if (isInside)
         {
             Debug.Log($"{collider.name} 완전히 안에 있는 상태");
+            SliceObject sliceObject = collider.GetComponent<SliceObject>();
+            GameObject obj = Instantiate(sliceObject.gameObject, transform.GetChild(0).GetChild(1));
+            gameManager.InObject.SliceObjectInList(obj);
+            obj.SetActive(false);
         }
         else
         {
