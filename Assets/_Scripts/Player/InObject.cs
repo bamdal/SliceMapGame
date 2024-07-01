@@ -13,7 +13,7 @@ public class InObject : MonoBehaviour
     /// </summary>
     int cutcountZero;
 
-    Dictionary<int,List<GameObject>> polaroidPicture ;
+    Dictionary<int,List<GameObject>> polaroidPicture;
 
     public Action<int> onPolaroidIndex;
 

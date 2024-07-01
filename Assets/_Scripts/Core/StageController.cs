@@ -25,7 +25,6 @@ public class StageController : MonoBehaviour
             Destroy(transform.GetChild(0).gameObject);
             count++;
             yield return null;
-            Debug.Log("asd");
         }
     }
 
