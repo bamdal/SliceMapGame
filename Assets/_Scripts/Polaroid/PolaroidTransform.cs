@@ -114,6 +114,7 @@ public class PolaroidTransform : MonoBehaviour
     public void EnablePolaroid(int index)
     {
         polaroids[index].gameObject.SetActive(true);
+        polaroids[index].SetPolaroidName(index.ToString());
         enablePolaroids.Add(index);
     }
 
