@@ -64,6 +64,10 @@ public class SliceObject : Slice
 
 
                 }
+                else if (index == 0 && intersectingPlanes.Count == 0 && meshes.Length ==2)
+                {
+                 
+                }
                 else
                 {
                     submesh = Instantiate(this.gameObject, inObject.transform);

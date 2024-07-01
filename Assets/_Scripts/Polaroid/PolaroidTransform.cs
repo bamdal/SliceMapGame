@@ -3,11 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Windows;
+using static UnityEngine.ScreenCapture;
 
 public class PolaroidTransform : MonoBehaviour
 {
-
+    /// <summary>
+    /// 폴라로이드 프리펩
+    /// </summary>
     public GameObject PolaroidPrefab;
+
+    /// <summary>
+    /// 폴라로이드에 적용할 이미지 머티리얼
+    /// </summary>
+    public Material[] polarioidMaterial;
+
+    /// <summary>
+    /// 폴라로이드 메시 렌더러
+    /// </summary>
+    MeshRenderer[] meshRenderer;
+
 
     Polaroid[] polaroids;
     //활성화시 0,1.35,2 에 ratation 0,0,0
@@ -58,6 +72,7 @@ public class PolaroidTransform : MonoBehaviour
 
 
     GameManager gameManager;
+
     private void Awake()
     {
         enablePolaroids = new List<int>();
@@ -79,7 +94,7 @@ public class PolaroidTransform : MonoBehaviour
     IEnumerator Init()
     {
         polaroids = new Polaroid[gameManager.MaxCutCount];
-
+        meshRenderer = new MeshRenderer[polaroids.Length];
         while (gameManager.InObject.onPolaroidIndex != null)
         {
             yield return null;
@@ -92,9 +107,14 @@ public class PolaroidTransform : MonoBehaviour
             yield return null;
             GameObject obj = Instantiate(PolaroidPrefab, transform);
             //obj.transform.position = transform.position + nomalPosition;
+            meshRenderer[i] = obj.GetComponent<MeshRenderer>();
+
             polaroids[i] = obj?.GetComponent<Polaroid>();
             polaroids[i].SetIndex(i);
             polaroids[i].SetDestination(transform.position + nomalPosition);
+
+            
+
             obj.SetActive(false);
         }
 
@@ -108,13 +128,26 @@ public class PolaroidTransform : MonoBehaviour
     }
 
     /// <summary>
+    /// 화면의 사진을 캡쳐할 코루틴
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator RecordFrame(int index)
+    {
+        yield return new WaitForEndOfFrame();
+        var texture = ScreenCapture.CaptureScreenshotAsTexture(StereoScreenCaptureMode.BothEyes);
+        polarioidMaterial[index].SetTexture("_BaseMap", texture);
+        meshRenderer[index].material = polarioidMaterial[index];
+
+    }
+
+    /// <summary>
     /// 사진이 찍혔을때 해당 폴라로이드 활성화
     /// </summary>
     /// <param name="index">폴라로이드 인덱스</param>
     public void EnablePolaroid(int index)
     {
+        StartCoroutine(RecordFrame(index));
         polaroids[index].gameObject.SetActive(true);
-        polaroids[index].SetPolaroidName(index.ToString());
         enablePolaroids.Add(index);
     }
 
@@ -126,6 +159,22 @@ public class PolaroidTransform : MonoBehaviour
     {
         polaroids[currnetPolaroidIndex].gameObject.SetActive(false);
         enablePolaroids.RemoveAt(selectedCurser);
+    }
+
+    public void EnableChild()
+    {
+        foreach (var index in enablePolaroids)
+        {
+            polaroids[index].gameObject.SetActive(true);
+        }
+    }
+
+    public void DisbleChild()
+    {
+        foreach (var child in polaroids)
+        {
+            child.gameObject.SetActive(false);
+        }
     }
 
     /// <summary>

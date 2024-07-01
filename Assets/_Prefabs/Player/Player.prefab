@@ -721,6 +721,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PolaroidPrefab: {fileID: 7277543995814341869, guid: ba28587d6322e394c86b023b250ce352,
     type: 3}
+  polarioidMaterial:
+  - {fileID: 2100000, guid: f2ee4e72f0e16274987dc0a0e7971cd7, type: 2}
+  - {fileID: 2100000, guid: 1f37198b9ba2557438eaef32aafa0aea, type: 2}
+  - {fileID: 2100000, guid: 7b7c1943504edfd4a9e330e2a18a755f, type: 2}
+  - {fileID: 2100000, guid: 3413802d091b304428f785577f3b0ac1, type: 2}
+  - {fileID: 2100000, guid: 478167c964fc30949abe9214aaf7865d, type: 2}
 --- !u!1 &6759567578875767390
 GameObject:
   m_ObjectHideFlags: 0

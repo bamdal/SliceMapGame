@@ -28,15 +28,6 @@ public class Polaroid : MonoBehaviour
 
     public bool PolaroidSelected => selected;
 
-    /// <summary>
-    /// 폴라로이드 텍스트(몇번째 사진인지 파악용도)
-    /// </summary>
-    TextMeshPro polaroidText;
-
-    private void Awake()
-    {
-        polaroidText = GetComponentInChildren<TextMeshPro>();
-    }
 
     private void OnEnable()
     {
@@ -58,10 +49,6 @@ public class Polaroid : MonoBehaviour
         }
     }
 
-    public void SetPolaroidName(string polaroidName)
-    {
-        polaroidText.text = polaroidName;
-    }
 
     public void SetDestination(Vector3 destination)
     {

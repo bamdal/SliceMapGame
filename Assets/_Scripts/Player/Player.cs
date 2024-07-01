@@ -1,3 +1,4 @@
+using Cinemachine;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -53,6 +54,8 @@ public class Player : MonoBehaviour
 
     GameManager gameManager;
 
+    CinemachineVirtualCamera playerCam;
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
@@ -67,7 +70,8 @@ public class Player : MonoBehaviour
 
         gameManager = GameManager.Instance;
         gameManager.onViewPolaroid += DownPolaroid;
-       
+
+        playerCam = FindAnyObjectByType<CinemachineVirtualCamera>();
     }
 
     private void OnDestroy()
@@ -105,7 +109,7 @@ public class Player : MonoBehaviour
     void CameraDisable()
     {
         CameraTransform.gameObject.SetActive(false);
-        polaroidTransform.gameObject.SetActive(false);
+        polaroidTransform.DisbleChild();
         onCameraDisplay?.Invoke(usedCamera);
         
     }
@@ -116,7 +120,7 @@ public class Player : MonoBehaviour
     void CameraEnable()
     {
         CameraTransform.gameObject.SetActive(true);
-        polaroidTransform.gameObject.SetActive(true);
+        polaroidTransform.EnableChild();
     }
 
     /// <summary>
@@ -131,11 +135,14 @@ public class Player : MonoBehaviour
             {
                 usedCamera = false;
                 Anim_DownCamera();
+                //playerCam.m_Lens.FieldOfView = 40;
+
             }
             else
             {
                 usedCamera = true;
                 Anim_UpCamera();
+                //playerCam.m_Lens.FieldOfView = 10;
             }
         }
 
