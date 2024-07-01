@@ -13,7 +13,7 @@ public class InObject : MonoBehaviour
     /// </summary>
     int cutcountZero;
 
-    Dictionary<int,List<GameObject>> polaroidPicture = new Dictionary<int,List<GameObject>>();
+    Dictionary<int,List<GameObject>> polaroidPicture ;
 
     public Action<int> onPolaroidIndex;
 
@@ -25,6 +25,7 @@ public class InObject : MonoBehaviour
     public void Init()
     {
         // 첫번째 키값을 0으로 하기위함
+        polaroidPicture = new Dictionary<int, List<GameObject>>();
         PlayerCutCount = -1;
     }
 

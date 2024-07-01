@@ -66,7 +66,7 @@ public class SliceObject : Slice
                 }
                 else if (index == 0 && intersectingPlanes.Count == 0 && meshes.Length ==2)
                 {
-                 
+                    // 가운데에 남을 오브젝트 찌꺼기 생기는거 방지 예외처리
                 }
                 else
                 {
