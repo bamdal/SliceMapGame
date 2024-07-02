@@ -61,7 +61,7 @@ public class PolaroidTransform : MonoBehaviour
     /// <summary>
     /// 사진찍힌 폴라로이드 검색용 커서
     /// </summary>
-    int selectedCurser = 0;
+    int selectedCursor = 0;
 
 
     /// <summary>
@@ -158,7 +158,7 @@ public class PolaroidTransform : MonoBehaviour
     public void DisablePolaroid()
     {
         polaroids[currnetPolaroidIndex].gameObject.SetActive(false);
-        enablePolaroids.RemoveAt(selectedCurser);
+        enablePolaroids.RemoveAt(selectedCursor);
     }
 
     public void EnableChild()
@@ -187,17 +187,17 @@ public class PolaroidTransform : MonoBehaviour
         {
             if (input)
             {
-                selectedCurser++;
+                selectedCursor++;
 
             }
             else
             {
-                selectedCurser--;
+                selectedCursor--;
             }
-            selectedCurser = Mathf.Clamp(selectedCurser, 0, enablePolaroids.Count - 1);
+            selectedCursor = Mathf.Clamp(selectedCursor, 0, enablePolaroids.Count - 1);
             if (enablePolaroids.Count > 0)
             {
-                CurrnetPolaroidIndex = enablePolaroids[selectedCurser];
+                CurrnetPolaroidIndex = enablePolaroids[selectedCursor];
                 Debug.Log(CurrnetPolaroidIndex);
 
             }

@@ -1,0 +1,51 @@
+{
+    "name": "OptionInputActions",
+    "maps": [
+        {
+            "name": "Option",
+            "id": "8bf0fbf1-31dc-48be-8205-e496adc93559",
+            "actions": [
+                {
+                    "name": "ESC",
+                    "type": "Button",
+                    "id": "13006f84-bae8-4787-bfbb-6fef3179dec3",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "689e7412-76da-433f-937a-11510f017b4d",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "KM",
+                    "action": "ESC",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        {
+            "name": "KM",
+            "bindingGroup": "KM",
+            "devices": [
+                {
+                    "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
+                    "isOptional": false,
+                    "isOR": false
+                }
+            ]
+        }
+    ]
+}

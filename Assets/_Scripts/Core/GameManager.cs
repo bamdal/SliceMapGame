@@ -11,6 +11,7 @@ public enum GameState
     None,
     GameReady,
     GameStarted,
+    GamePlaying,
     GameFinished,
     GamePaused
 
@@ -261,11 +262,15 @@ public class GameManager : Singleton<GameManager>
             case GameState.GameReady:
                 GameRefresh();
                 break;
+            case GameState.GamePlaying:
+                break;
             case GameState.GameStarted:
                 break;
             case GameState.GameFinished:
                 break;
             case GameState.GamePaused:
+                Player.playerInput.enabled = true;
+
                 break;
         }
     }
@@ -281,9 +286,12 @@ public class GameManager : Singleton<GameManager>
             case GameState.GameStarted:
 
                 break;
+            case GameState.GamePlaying:
+                break;
             case GameState.GameFinished:
                 break;
             case GameState.GamePaused:
+                Player.playerInput.enabled = false;
                 break;
         }
     }

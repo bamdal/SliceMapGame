@@ -2,6 +2,7 @@ using Cinemachine;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.ProBuilder;
 
 public class Player : MonoBehaviour
@@ -56,11 +57,13 @@ public class Player : MonoBehaviour
 
     CinemachineVirtualCamera playerCam;
 
+    public PlayerInput playerInput;
     private void Awake()
     {
         animator = GetComponent<Animator>();
         CameraTransform = transform.GetChild(2);
         polaroidTransform = GetComponentInChildren<PolaroidTransform>();
+        playerInput = GetComponent<PlayerInput>();
     }
 
     private void Start()

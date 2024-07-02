@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 
 public class StageController : MonoBehaviour
 {
@@ -13,9 +14,10 @@ public class StageController : MonoBehaviour
     {
         GameManager gameManager = GameManager.Instance;
         gameManager.GameState = setGameState;
-
+        Cursor.lockState = CursorLockMode.Locked;
         StartCoroutine(DestroyChild(gameManager.InObject.transform, 100));
         StartCoroutine(DestroyChild(gameManager.OutObject.transform, 100));
+
     }
     IEnumerator DestroyChild(Transform transform, int loopCount)
     {
