@@ -1,5 +1,6 @@
 using Cinemachine;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -58,12 +59,22 @@ public class Player : MonoBehaviour
     CinemachineVirtualCamera playerCam;
 
     public PlayerInput playerInput;
+
+
+    Transform sliceObjectContains;
+    /// <summary>
+    /// 잘라낸 오브젝트들이 저장될 트랜스폼
+    /// </summary>
+    public Transform SliceObjectContains => sliceObjectContains;
+
+
     private void Awake()
     {
         animator = GetComponent<Animator>();
         CameraTransform = transform.GetChild(2);
         polaroidTransform = GetComponentInChildren<PolaroidTransform>();
         playerInput = GetComponent<PlayerInput>();
+        sliceObjectContains = transform.GetChild(0).GetChild(1);
     }
 
     private void Start()
@@ -211,6 +222,68 @@ public class Player : MonoBehaviour
         Toggle_VeiwPolaroid();
     }
 
+    
+    /// <summary>
+    /// 오른쪽 회전 입력
+    /// </summary>
+    /// <param name="start">시작하기</param>
+    public void PolaroidRRotate(bool start)
+    {
+        if (start)
+        {
+            StopAllCoroutines();
+            StartCoroutine(PolaroidRotate(true));
+        }
+        else
+        {
+            StopAllCoroutines();
+        }
+    }
+
+    /// <summary>
+    /// 왼쪽 회전 입력
+    /// </summary>
+    /// <param name="start">시작하기</param>
+    public void PolaroidLRotate(bool start)
+    {
+        if (start)
+        {
+            StopAllCoroutines();
+            StartCoroutine(PolaroidRotate(false));
+        }
+        else
+        {
+            StopAllCoroutines();
+        }
+
+    }
+
+    /// <summary>
+    /// 폴라로이드 돌리기(사진은 안돌아감)
+    /// </summary>
+    /// <param name="R">true면 오른쪽 회전 </param>
+    /// <returns></returns>
+    IEnumerator PolaroidRotate(bool R)
+    {
+        if (R)
+        {
+            while (true)
+            {
+                SliceObjectContains.Rotate(Vector3.forward, Time.deltaTime * -1f);
+                yield return null;
+            }
+        }
+        else
+        {
+            while (true)
+            {
+                SliceObjectContains.Rotate(Vector3.forward, Time.deltaTime * 1f);
+                yield return null;
+
+            }
+        }
+    }
+
     // mesh Slice 관련 =========================================================================================
 
     public void TakePicture(Collider collider)
@@ -238,6 +311,8 @@ public class Player : MonoBehaviour
             Debug.Log($"{collider.name} 완전히 안에 있는 상태");
             SliceObject sliceObject = collider.GetComponent<SliceObject>();
             GameObject obj = Instantiate(sliceObject.gameObject, transform.GetChild(0).GetChild(1));
+            obj.transform.position = sliceObject.transform.localPosition;
+
             gameManager.InObject.SliceObjectInList(obj);
             obj.SetActive(false);
         }

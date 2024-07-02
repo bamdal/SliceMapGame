@@ -88,7 +88,7 @@ public class SliceObject : Slice
                         if (!gameManager.Player.TogglePolaroid && gameManager.GetCamera)
                         {
                             inObject.SliceObjectInList(submesh);
-                            submesh.transform.parent = GameManager.Instance.Player.transform.GetChild(0).GetChild(1);
+                            submesh.transform.parent = GameManager.Instance.Player.SliceObjectContains;
                         }
                     }
                 }

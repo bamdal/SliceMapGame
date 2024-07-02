@@ -17,10 +17,26 @@ public class Portal : MonoBehaviour
 {
     public StageName selectStage = StageName.Stage1;
 
+    public bool isOpen = true;
+
+    ParticleSystem portalParticle;
+
+    private void Awake()
+    {
+        portalParticle = transform.GetChild(1).GetComponent<ParticleSystem>();
+        if (isOpen)
+        {
+            portalParticle.Play();
+        }
+        else
+        {
+            portalParticle.Stop();
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (isOpen && other.CompareTag("Player"))
         {
 
             SceneManager.LoadScene((int)selectStage);

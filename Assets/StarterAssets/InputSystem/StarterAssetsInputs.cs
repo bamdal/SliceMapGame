@@ -81,6 +81,17 @@ namespace StarterAssets
 		{
 			RestartInput(context.performed);
 		}
+
+		public void OnE(InputAction.CallbackContext context)
+        {
+            EInput(!context.canceled);
+        }
+
+        public void OnQ(InputAction.CallbackContext context)
+        {
+            QInput(!context.canceled);
+
+        }
 #endif
 
 
@@ -138,6 +149,18 @@ namespace StarterAssets
 		{
 			gameManager.ViewPolaroid = newTabState;
 		}
+
+        public void EInput(bool newEState)
+        {
+			gameManager.Player.PolaroidRRotate(newEState);
+        }
+        public void QInput(bool newQState)
+        {
+            gameManager.Player.PolaroidLRotate(newQState);
+
+        }
+
+
 
         private void OnApplicationFocus(bool hasFocus)
 		{
