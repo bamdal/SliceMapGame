@@ -84,12 +84,12 @@ namespace StarterAssets
 
 		public void OnE(InputAction.CallbackContext context)
         {
-            EInput(!context.canceled);
+           // EInput(!context.canceled);
         }
 
         public void OnQ(InputAction.CallbackContext context)
         {
-            QInput(!context.canceled);
+           // QInput(!context.canceled);
 
         }
 #endif

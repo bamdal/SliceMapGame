@@ -1654,7 +1654,7 @@ PrefabInstance:
     - target: {fileID: 1842750599052158557, guid: 1f0c74b6618bc2347bf65e4910202497,
         type: 3}
       propertyPath: m_text
-      value: 'Stage 4
+      value: 'End
 
 '
       objectReference: {fileID: 0}
@@ -1726,7 +1726,7 @@ PrefabInstance:
     - target: {fileID: 8387910370750078287, guid: 1f0c74b6618bc2347bf65e4910202497,
         type: 3}
       propertyPath: selectStage
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
